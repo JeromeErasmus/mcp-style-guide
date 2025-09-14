@@ -2,23 +2,39 @@ import { promises as fs } from 'fs';
 import { PageContent, SearchResult, DownloadResult } from '../types/index.js';
 
 export function formatAsMarkdown(content: PageContent): string {
-  let markdown = `# ${content.title}\n\n`;
+  let markdown = `# ${cleanText(content.title)}\n\n`;
   markdown += `**Source:** ${content.url}\n`;
   markdown += `**Last Fetched:** ${content.lastFetched.toISOString()}\n\n`;
   
-  // Add main content
-  if (content.content) {
-    markdown += `## Overview\n\n${content.content}\n\n`;
+  // Add main content if it's meaningful
+  const cleanContent = cleanAndFormatText(content.content);
+  if (cleanContent && cleanContent.length > 50) {
+    markdown += `## Overview\n\n${cleanContent}\n\n`;
   }
   
-  // Add sections with proper hierarchy
+  // Add sections with proper hierarchy and clean content
+  const processedSections = new Set<string>();
+  
   for (const section of content.sections) {
-    const headerLevel = '#'.repeat(section.level + 1); // h2->###, h3->####
-    markdown += `${headerLevel} ${section.heading}\n\n`;
-    markdown += `${section.content}\n\n`;
+    const cleanHeading = cleanText(section.heading);
+    const cleanSectionContent = cleanAndFormatText(section.content);
+    
+    // Skip empty or duplicate sections
+    if (!cleanHeading || !cleanSectionContent || processedSections.has(cleanHeading)) {
+      continue;
+    }
+    
+    processedSections.add(cleanHeading);
+    
+    // Ensure proper heading levels (min h2, max h4)
+    const level = Math.min(Math.max(section.level, 2), 4);
+    const headerLevel = '#'.repeat(level);
+    
+    markdown += `${headerLevel} ${cleanHeading}\n\n`;
+    markdown += `${cleanSectionContent}\n\n`;
   }
   
-  return markdown;
+  return markdown.replace(/\n{3,}/g, '\n\n'); // Clean up excessive line breaks
 }
 
 export function formatSearchResults(results: SearchResult[], query: string): string {
@@ -39,14 +55,47 @@ export function formatSearchResults(results: SearchResult[], query: string): str
   return markdown;
 }
 
+export function cleanText(text: string): string {
+  if (!text) return '';
+  
+  return text
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .replace(/[\r\n\t]/g, ' ') // Remove line breaks and tabs
+    .trim()
+    .replace(/^[\s\-•→]+/, '') // Remove leading symbols
+    .replace(/[\s\-•→]+$/, ''); // Remove trailing symbols
+}
+
+export function cleanAndFormatText(text: string): string {
+  if (!text) return '';
+  
+  let cleaned = text
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .replace(/[\r\n\t]/g, '\n') // Preserve intentional line breaks
+    .trim();
+  
+  // Split into paragraphs and clean each
+  const paragraphs = cleaned.split(/\n\s*\n/)
+    .map(p => p.trim())
+    .filter(p => p.length > 10) // Remove very short snippets
+    .filter(p => !p.match(/^[\s\-•→]+$/)); // Remove symbol-only lines
+  
+  return paragraphs.join('\n\n');
+}
+
 export function generateFilename(url: string): string {
   try {
     const urlObj = new URL(url);
-    const pathname = urlObj.pathname;
+    let pathname = urlObj.pathname;
     
-    // Extract meaningful part: /grammar-punctuation/ -> grammar-punctuation
+    // Handle homepage
+    if (pathname === '/' || pathname === '') {
+      return 'homepage.md';
+    }
+    
+    // Extract meaningful part: /grammar-punctuation-and-conventions/ -> grammar-punctuation-and-conventions
     const segments = pathname.split('/').filter(s => s.length > 0);
-    const filename = segments[segments.length - 1] || 'homepage';
+    let filename = segments[segments.length - 1] || segments[segments.length - 2] || 'page';
     
     // Clean filename for filesystem
     const cleanName = filename

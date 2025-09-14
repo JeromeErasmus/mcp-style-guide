@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SimpleContentExtractor } from '../extraction/content-extractor.js';
+import { StyleManualExtractor } from '../extraction/style-manual-extractor.js';
 import { formatAsMarkdown } from '../utils/formatters.js';
 import { handleToolError } from '../utils/errors.js';
 import { ToolError } from '../types/index.js';
@@ -20,7 +20,7 @@ export const fetchPageTool = {
         throw new ToolError(`Invalid URL: must be from stylemanual.gov.au domain`);
       }
       
-      const extractor = new SimpleContentExtractor();
+      const extractor = new StyleManualExtractor();
       const content = await extractor.extractPageContent(url);
       
       // Format as markdown

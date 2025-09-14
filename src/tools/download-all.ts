@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { promises as fs } from 'fs';
-import { SimpleContentExtractor } from '../extraction/content-extractor.js';
+import { StyleManualExtractor } from '../extraction/style-manual-extractor.js';
 import { BatchProcessor } from '../processing/batch-processor.js';
 import { formatAsMarkdown, generateFilename, generateIndexFiles } from '../utils/formatters.js';
 import { handleToolError } from '../utils/errors.js';
@@ -16,7 +16,7 @@ export const downloadAllTool = {
     try {
       const { STYLE_MANUAL_URLS } = await import('../config/urls.js') as { STYLE_MANUAL_URLS: Record<string, string> };
       const batchProcessor = new BatchProcessor();
-      const extractor = new SimpleContentExtractor();
+      const extractor = new StyleManualExtractor();
       
       // Create organized directory structure
       await fs.mkdir(`${outputDir}/sections`, { recursive: true });

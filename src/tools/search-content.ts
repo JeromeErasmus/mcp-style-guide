@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SimpleContentExtractor } from '../extraction/content-extractor.js';
+import { StyleManualExtractor } from '../extraction/style-manual-extractor.js';
 import { SimpleSearch } from '../search/simple-search.js';
 import { BatchProcessor } from '../processing/batch-processor.js';
 import { formatSearchResults } from '../utils/formatters.js';
@@ -36,7 +36,7 @@ export const searchContentTool = {
       const results = await batchProcessor.processUrlsInBatches(
         searchUrls,
         async (url) => {
-          const extractor = new SimpleContentExtractor();
+          const extractor = new StyleManualExtractor();
           const content = await extractor.extractPageContent(url);
           const matches = searcher.findMatches(content, query);
           return matches.length > 0 ? { url, matches } : null;

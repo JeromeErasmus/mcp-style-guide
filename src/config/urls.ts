@@ -1,6 +1,5 @@
-// @ts-check
-// src/config/urls.js
-export const STYLE_MANUAL_URLS = {
+// src/config/urls.ts
+export const STYLE_MANUAL_URLS: Record<string, string> = {
   // Core sections
   homepage: 'https://www.stylemanual.gov.au/',
   
@@ -28,7 +27,7 @@ export const STYLE_MANUAL_URLS = {
 };
 
 // Default URLs for search when none specified
-export const DEFAULT_SEARCH_URLS = [
+export const DEFAULT_SEARCH_URLS: string[] = [
   STYLE_MANUAL_URLS.writingContent,
   STYLE_MANUAL_URLS.grammarPunctuation,
   STYLE_MANUAL_URLS.accessibleContent,
@@ -41,7 +40,7 @@ export const DEFAULT_SEARCH_URLS = [
 // URL validation
 export const ALLOWED_DOMAIN = 'stylemanual.gov.au';
 
-export function isValidStyleManualUrl(url) {
+export function isValidStyleManualUrl(url: string): boolean {
   try {
     const urlObj = new URL(url);
     return urlObj.hostname === ALLOWED_DOMAIN || urlObj.hostname === `www.${ALLOWED_DOMAIN}`;
