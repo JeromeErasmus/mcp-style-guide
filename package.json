@@ -1,0 +1,36 @@
+{
+  "name": "australian-style-manual-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Australian Government Style Manual reference tool",
+  "type": "module",
+  "main": "dist/server.js",
+  "bin": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/server.ts",
+    "start": "node dist/server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.0",
+    "cheerio": "^1.0.0",
+    "node-fetch": "^3.3.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "style-manual",
+    "australian-government",
+    "writing-guide"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
