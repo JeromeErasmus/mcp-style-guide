@@ -50,54 +50,9 @@ yarn build
 }
 ```
 
-## Usage
-
-### With Claude Code
-
-Add to your Claude Code MCP configuration:
-
-```json
-{
-  "mcpServers": {
-    "australian-style-manual": {
-      "command": "node",
-      "args": ["path/to/mcp-style-guide/dist/server.js"]
-    }
-  }
-}
-```
-
-### Development
-
-```bash
-yarn dev
-```
-
 ## How It Works
 
-### 1. One-Time Setup
-
-**Install and configure:**
-```bash
-git clone <repository>
-cd mcp-style-guide
-yarn install
-yarn build
-```
-
-**Add to Claude Code configuration:**
-```json
-{
-  "mcpServers": {
-    "australian-style-manual": {
-      "command": "node",
-      "args": ["/absolute/path/to/mcp-style-guide/dist/server.js"]
-    }
-  }
-}
-```
-
-### 2. Download Content (One Time)
+### 1. Download Content (One Time)
 
 **You:** "Download all Australian Style Manual content for offline use"
 
@@ -105,7 +60,7 @@ yarn build
 
 **Result:** Creates organized local files for instant access
 
-### 3. Daily Usage (Lightning Fast)
+### 2. Daily Usage (Lightning Fast)
 
 **Scenario: "How do I use semicolons in government writing?"**
 
@@ -130,33 +85,18 @@ read style-manual/sections/accessible-inclusive-content.md
 grep -i -C 3 "plain english" style-manual/sections/*.md
 ```
 
-### 4. Targeted Updates
+### 3. Targeted Updates
 
 **You:** "Check the latest grammar guidelines"
 
 **Claude Code:** Uses `fetch_style_page()` for just that page
 
-### 5. Research Queries
+### 4. Research Queries
 
 **You:** "Find content about bullet points across multiple pages"
 
 **Claude Code:** Uses `search_style_content()` for comprehensive search
 
-## Performance Comparison
-
-### ❌ Without This Tool
-1. Google "Australian Style Manual semicolons"
-2. Navigate to website (slow)
-3. Browse multiple pages
-4. Copy/paste content
-5. Repeat for each question
-
-### ✅ With This Tool
-1. **One-time:** Download content (5 minutes setup)
-2. **Daily:** Instant `grep`/`read` commands
-3. **Monthly:** Refresh as needed
-
-**Speed difference:** Network requests (3-5 seconds) → Local search (instant)
 
 ## MCP Tools Reference
 
@@ -206,19 +146,18 @@ Search across multiple pages for specific terms.
 }
 ```
 
-## Typical Usage Pattern
+## Typical Workflow
 
 ```bash
-# Week 1: Initial setup (one time)
+# Initial setup (once)
 download_all_content({ outputDir: "./style-manual" })
 
-# Week 1-52: Daily usage (all instant)
-grep "acronym" style-manual/sections/*.md
-read style-manual/sections/grammar-punctuation.md  
-glob "**/accessibility*.md"
-grep -i -C 3 "apostrophe" style-manual/sections/*.md
+# Daily usage (instant)
+grep "term" style-manual/sections/*.md
+read style-manual/sections/specific-file.md
+glob "**/pattern*.md"
 
-# Month 3: Refresh content (as needed)
+# Refresh (monthly)
 download_all_content({ outputDir: "./style-manual" })
 ```
 
@@ -231,80 +170,32 @@ URLs are configured in `src/config/urls.js`. The default set includes:
 - Formatting guidelines
 - 15+ comprehensive style guide pages
 
-## Real Usage Examples
+## Usage Examples
 
-### Writing a Government Press Release
-
-**You:** "Help me write a government press release following Australian Style Manual guidelines"
-
-**Claude Code instantly searches:**
+**Writing a Press Release:**
 ```bash
-# Find press release guidance
-grep -i -A 10 "press release\|media\|announcement" style-manual/sections/*.md
-
-# Check tone guidelines
-grep -i -B 5 -A 10 "tone\|voice\|style" style-manual/sections/writing-*.md
-
-# Verify accessibility requirements  
+grep -i -A 10 "press release\|media" style-manual/sections/*.md
+grep -i "tone\|voice" style-manual/sections/writing-*.md
 read style-manual/sections/accessible-inclusive-content.md
-
-# Check formatting rules
-grep -i "heading\|format" style-manual/sections/*.md
 ```
 
-**Result:** Comprehensive, current guidance in seconds
-
-### Checking Punctuation Rules
-
-**You:** "What's the rule for apostrophes in government writing?"
-
-**Claude Code:** 
+**Checking Punctuation:**
 ```bash
-grep -i -C 5 "apostrophe" style-manual/sections/*.md
+grep -i -C 5 "apostrophe\|semicolon" style-manual/sections/*.md
 ```
-**Result:** Exact rules with context, instantly
 
-### Finding Specific Guidelines
-
-**You:** "Show me all acronym guidelines"
-
-**Claude Code:**
+**Finding Guidelines:**
 ```bash
 grep -i -A 15 "acronym" style-manual/sections/*.md
+glob "**/accessibility*.md"
 ```
-**Result:** Complete acronym section with examples
 
-## Why This Hybrid Approach Works
-
-1. **MCP handles complexity:** Web scraping, rate limiting, content extraction
-2. **Native tools handle speed:** Search, filtering, content access  
-3. **Best of both worlds:** Comprehensive content + instant access
-4. **Respectful to website:** Download once, use offline
-5. **Always current:** Easy refresh via MCP tools
-6. **Reference library approach:** Better than live API for documentation
-
-## Performance Benefits
-
-- **10x faster searches:** Local grep vs network requests
-- **Always available:** Works offline
-- **Comprehensive:** Full-text search across all content
-- **Context-aware:** See surrounding content with `-A`, `-B`, `-C` flags
-- **Flexible queries:** Combine multiple search patterns
-
-## Security & Reliability
-
-- **Domain restriction:** Only stylemanual.gov.au URLs allowed
-- **Input validation:** Zod schemas prevent malformed requests
-- **Error handling:** Graceful failures with helpful messages
-- **Rate limiting:** Respectful 2-second delays between requests
-- **Batch processing:** Maximum 3 concurrent requests
-- **Offline capability:** No network dependency after initial download
 
 ## Development
 
 ```bash
-yarn build    # Build TypeScript
 yarn dev      # Development mode
+yarn build    # Build TypeScript
 yarn test     # Run tests
 ```
 
