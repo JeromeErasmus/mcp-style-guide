@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { readFile, writeFile } from 'fs/promises';
 import { StyleManualExtractor } from '../extraction/style-manual-extractor.js';
 import { SimpleSearch } from '../search/simple-search.js';
 import { formatAsMarkdown } from '../utils/formatters.js';
@@ -129,9 +130,11 @@ interface StyleGuideline {
 
 export const rewriteDocumentTool = {
   name: "rewrite_with_style_guide",
-  description: "Rewrite document using Australian Style Manual recommendations. Applies style guidelines for plain language, active voice, punctuation, inclusive language, and accessibility.",
+  description: "Rewrite document using Australian Style Manual recommendations. Applies style guidelines for plain language, active voice, punctuation, inclusive language, and accessibility. Supports both direct document content and file input/output.",
   inputSchema: z.object({
-    document: z.string().describe("The document text to rewrite"),
+    document: z.string().optional().describe("The document text to rewrite (required if no inputFile)"),
+    inputFile: z.string().optional().describe("Path to input file to read and rewrite (required if no document)"),
+    outputFile: z.string().optional().describe("Path to output file to write the rewritten content (optional, prints to console if not specified)"),
     focusAreas: z.array(z.enum([
       'plain-language', 
       'active-voice', 
@@ -178,10 +181,14 @@ export const rewriteDocumentTool = {
     ]).describe("Specific style areas to focus on (default: comprehensive readability, structure, and formatting areas)"),
     targetAudience: z.enum(['general-public', 'government-staff', 'technical-audience']).optional().default('general-public').describe("Target audience for the rewrite"),
     explanation: z.boolean().optional().default(true).describe("Include explanation of changes made")
+  }).refine((data) => data.document || data.inputFile, {
+    message: "Either 'document' content or 'inputFile' path must be provided"
   }),
   
   handler: async ({ 
-    document, 
+    document,
+    inputFile,
+    outputFile,
     focusAreas = [
       'plain-language', 
       'active-voice', 
@@ -206,12 +213,32 @@ export const rewriteDocumentTool = {
     targetAudience = 'general-public',
     explanation = true 
   }: { 
-    document: string; 
+    document?: string; 
+    inputFile?: string;
+    outputFile?: string;
     focusAreas?: ('plain-language' | 'active-voice' | 'punctuation' | 'inclusive-language' | 'grammar' | 'accessibility' | 'structure' | 'spelling' | 'structuringContent' | 'headings' | 'links' | 'lists' | 'paragraphs' | 'tables' | 'sentences' | 'howPeopleFindInfo' | 'numeralsOrWords' | 'currency' | 'dateTime' | 'typesStructure' | 'hierarchicalStructure' | 'sequentialStructure')[] | undefined; 
     targetAudience?: 'general-public' | 'government-staff' | 'technical-audience' | undefined;
     explanation?: boolean | undefined;
   }) => {
     try {
+      // Validate input: either document content or inputFile must be provided
+      if (!document && !inputFile) {
+        throw new ToolError('Either document content or inputFile must be provided');
+      }
+
+      // Read document content from file if inputFile is provided
+      let documentContent: string;
+      if (inputFile) {
+        try {
+          documentContent = await readFile(inputFile, 'utf-8');
+          console.log(`📖 Read ${documentContent.length} characters from ${inputFile}`);
+        } catch (error) {
+          throw new ToolError(`Failed to read input file: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error : undefined);
+        }
+      } else {
+        documentContent = document!;
+      }
+
       // Import URL configuration
       const { getFullUrl } = await import('../config/urls.js') as { getFullUrl: (path: string) => string };
       
@@ -259,10 +286,22 @@ export const rewriteDocumentTool = {
       const rewriteInstructions = generateRewriteInstructions(guidelines, targetAudience, focusAreas);
       
       // Apply rewriting logic
-      const rewrittenDocument = await applyStyleRewrite(document, rewriteInstructions, targetAudience);
+      const rewrittenDocument = await applyStyleRewrite(documentContent, rewriteInstructions, targetAudience);
+      
+      // Write to output file if specified
+      if (outputFile) {
+        try {
+          await writeFile(outputFile, rewrittenDocument, 'utf-8');
+          console.log(`💾 Written ${rewrittenDocument.length} characters to ${outputFile}`);
+        } catch (error) {
+          throw new ToolError(`Failed to write output file: ${error instanceof Error ? error.message : 'Unknown error'}`, error instanceof Error ? error : undefined);
+        }
+      }
       
       // Format response
-      let response = `# Rewritten Document\n\n${rewrittenDocument}\n\n`;
+      let response = outputFile ? 
+        `# Document Rewritten Successfully\n\n✅ **Input**: ${inputFile ? inputFile : 'Direct content'}\n✅ **Output**: ${outputFile}\n✅ **Length**: ${rewrittenDocument.length} characters\n\n` :
+        `# Rewritten Document\n\n${rewrittenDocument}\n\n`;
       
       if (explanation) {
         response += `## Style Manual Guidelines Applied\n\n`;
@@ -270,7 +309,7 @@ export const rewriteDocumentTool = {
         response += `**Focus Areas:** ${focusAreas.join(', ')}\n\n`;
         
         response += `### Key Changes Made:\n`;
-        response += generateChangeExplanation(document, rewrittenDocument, guidelines);
+        response += generateChangeExplanation(documentContent, rewrittenDocument, guidelines);
         
         response += `\n### Style Manual Sources:\n`;
         const uniqueSources = [...new Set(guidelines.map(g => g.source))];
@@ -280,7 +319,11 @@ export const rewriteDocumentTool = {
       }
       
       return {
-        content: [{ type: "text" as const, text: response }]
+        content: [{ type: "text" as const, text: response }],
+        // Include the rewritten document in the response for programmatic access
+        rewrittenDocument: rewrittenDocument,
+        inputSource: inputFile ? `file:${inputFile}` : 'direct',
+        outputDestination: outputFile ? `file:${outputFile}` : 'response'
       };
       
     } catch (error) {

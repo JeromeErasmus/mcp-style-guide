@@ -154,19 +154,52 @@ Search across multiple pages for specific terms.
 ```
 
 ### `rewrite_with_style_guide` (Document Improvement)
-Rewrite documents using Australian Style Manual guidelines for clarity, accessibility, and government standards.
+Rewrite documents using Australian Style Manual guidelines for clarity, accessibility, and government standards. **Supports both direct content and file input/output**.
 
 **When to use:** Improving existing documents, ensuring compliance with government writing standards
 
-**Input:**
+**Input Options:**
+
+**Option 1: Direct content**
 ```json
 {
   "document": "Your document text here...",
-  "focusAreas": ["plain-language", "active-voice", "structure", "accessibility", "inclusive-language", "structuringContent", "headings", "links", "lists", "paragraphs", "tables", "sentences", "howPeopleFindInfo", "numeralsOrWords", "currency", "dateTime", "typesStructure", "hierarchicalStructure", "sequentialStructure"],
+  "outputFile": "optional/output/path.md",
+  "focusAreas": ["plain-language", "active-voice", "structure"],
   "targetAudience": "general-public", 
   "explanation": true
 }
 ```
+
+**Option 2: File input/output**
+```json
+{
+  "inputFile": "path/to/input.md",
+  "outputFile": "path/to/improved.md",
+  "focusAreas": ["plain-language", "accessibility", "inclusive-language"],
+  "targetAudience": "technical-audience",
+  "explanation": true
+}
+```
+
+**Option 3: File input with console output**
+```json
+{
+  "inputFile": "path/to/input.md",
+  "focusAreas": ["structure", "plain-language"],
+  "targetAudience": "government-staff"
+}
+```
+
+**Parameters:**
+- `document` *(optional)*: Direct text content to rewrite
+- `inputFile` *(optional)*: Path to input file to read and rewrite
+- `outputFile` *(optional)*: Path to save the rewritten content
+- `focusAreas`: Areas to focus on (see full list below)
+- `targetAudience`: "general-public", "government-staff", or "technical-audience"
+- `explanation`: Include explanation of changes made
+
+**Note:** Either `document` or `inputFile` must be provided.
 
 **Focus Areas (defaults to comprehensive readability, structure, and formatting areas):**
 - `plain-language`: Year 7 reading level, simple words *(default)*
@@ -261,9 +294,9 @@ grep -i -A 15 "acronym" style-manual/sections/*.md
 glob "**/accessibility*.md"
 ```
 
-**Rewriting Government Documents:**
+**Simple Document Rewrite:**
 ```json
-// Simple rewrite with default settings
+// Direct content rewrite
 {
   "tool": "rewrite_with_style_guide",
   "document": "The utilisation of this process will be implemented by the department in order to facilitate improved outcomes for stakeholders.",
@@ -271,24 +304,26 @@ glob "**/accessibility*.md"
 }
 ```
 
-**Advanced Document Rewrite:**
+**File-to-File Document Processing:**
 ```json
-// Targeted improvements for specific areas  
+// Read from file, write improved version to another file
 {
   "tool": "rewrite_with_style_guide",
-  "document": "[Long government policy document]",
+  "inputFile": "./documents/draft-policy.md",
+  "outputFile": "./documents/draft-policy-improved.md",
   "focusAreas": ["plain-language", "structure", "inclusive-language"],
-  "targetAudience": "government-staff",
+  "targetAudience": "general-public",
   "explanation": true
 }
 ```
 
-**Policy Document Review:**
+**Batch Document Processing:**
 ```json
-// Accessibility-focused rewrite
+// Process file and save improved version
 {
   "tool": "rewrite_with_style_guide", 
-  "document": "[Policy document with complex language]",
+  "inputFile": "./complex-policy.md",
+  "outputFile": "./simple-policy.md",
   "focusAreas": ["accessibility", "plain-language", "structure"],
   "targetAudience": "general-public"
 }
