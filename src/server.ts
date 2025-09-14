@@ -6,6 +6,7 @@ import { z } from "zod";
 import { fetchPageTool } from './tools/fetch-page.js';
 import { searchContentTool } from './tools/search-content.js';
 import { downloadAllTool } from './tools/download-all.js';
+import { rewriteDocumentTool } from './tools/rewrite-document.js';
 
 // Create MCP server
 const server = new McpServer({
@@ -49,6 +50,30 @@ server.registerTool(
     }
   },
   downloadAllTool.handler
+);
+
+server.registerTool(
+  rewriteDocumentTool.name,
+  {
+    title: "Rewrite Document with Style Manual Guidelines",
+    description: rewriteDocumentTool.description,
+    inputSchema: {
+      document: z.string().describe("The document text to rewrite"),
+      focusAreas: z.array(z.enum([
+        'plain-language', 
+        'active-voice', 
+        'punctuation', 
+        'inclusive-language', 
+        'grammar', 
+        'accessibility', 
+        'structure', 
+        'spelling'
+      ])).optional().describe("Specific style areas to focus on (default: all areas)"),
+      targetAudience: z.enum(['general-public', 'government-staff', 'technical-audience']).optional().default('general-public').describe("Target audience for the rewrite"),
+      explanation: z.boolean().optional().default(true).describe("Include explanation of changes made")
+    }
+  },
+  rewriteDocumentTool.handler
 );
 
 // Start server

@@ -5,10 +5,11 @@ A Model Context Protocol (MCP) server that provides Claude with access to the Au
 ## Features
 
 - **Hybrid approach**: Download content once, search locally with Claude Code's native tools
-- **Three MCP tools**:
+- **Four MCP tools**:
   - `fetch_style_page`: Fetch individual pages from the Style Manual
   - `search_style_content`: Search across multiple pages for specific terms
   - `download_all_content`: Bulk download all configured pages to local markdown files
+  - `rewrite_with_style_guide`: Rewrite documents using Style Manual guidelines
 - **Respectful scraping**: Built-in rate limiting and batch processing
 - **Domain validation**: Only allows URLs from stylemanual.gov.au
 - **Rich markdown output**: Properly formatted content with sections and navigation
@@ -97,6 +98,12 @@ grep -i -C 3 "plain english" style-manual/sections/*.md
 
 **Claude Code:** Uses `search_style_content()` for comprehensive search
 
+### 5. Document Rewriting
+
+**You:** "Rewrite this government document to follow Style Manual guidelines"
+
+**Claude Code:** Uses `rewrite_with_style_guide()` to apply plain language, active voice, and accessibility improvements
+
 
 ## MCP Tools Reference
 
@@ -146,6 +153,56 @@ Search across multiple pages for specific terms.
 }
 ```
 
+### `rewrite_with_style_guide` (Document Improvement)
+Rewrite documents using Australian Style Manual guidelines for clarity, accessibility, and government standards.
+
+**When to use:** Improving existing documents, ensuring compliance with government writing standards
+
+**Input:**
+```json
+{
+  "document": "Your document text here...",
+  "focusAreas": ["plain-language", "active-voice", "punctuation", "inclusive-language", "accessibility"],
+  "targetAudience": "general-public", 
+  "explanation": true
+}
+```
+
+**Focus Areas (optional):**
+- `plain-language`: Year 7 reading level, simple words
+- `active-voice`: Convert passive to active voice  
+- `punctuation`: Fix punctuation and grammar
+- `inclusive-language`: Remove bias and discriminatory language
+- `grammar`: Improve sentence structure and word choice
+- `accessibility`: Optimize for screen readers and disabilities
+- `structure`: Improve headings, paragraphs, and lists
+- `spelling`: Fix common misspellings and word confusion
+
+**Target Audiences:**
+- `general-public`: Simplest language, no jargon (default)
+- `government-staff`: Some department terms acceptable
+- `technical-audience`: Technical terms allowed when appropriate
+
+**Example Output:**
+```markdown
+# Rewritten Document
+[Improved document text with Style Manual guidelines applied]
+
+## Style Manual Guidelines Applied
+**Target Audience:** general-public
+**Focus Areas:** plain-language, active-voice, punctuation
+
+### Key Changes Made:
+- Reduced word count by 45 words for clarity
+- Converted passive voice to active voice
+- Replaced complex words with simpler alternatives
+- Shortened average sentence length from 28 to 16 words
+
+### Style Manual Sources:
+- https://www.stylemanual.gov.au/writing-and-designing-content/clear-language-and-writing-style/plain-language-and-word-choice
+- https://www.stylemanual.gov.au/accessible-and-inclusive-content/literacy-and-access
+```
+
 ## Typical Workflow
 
 ```bash
@@ -188,6 +245,39 @@ grep -i -C 5 "apostrophe\|semicolon" style-manual/sections/*.md
 ```bash
 grep -i -A 15 "acronym" style-manual/sections/*.md
 glob "**/accessibility*.md"
+```
+
+**Rewriting Government Documents:**
+```json
+// Simple rewrite with default settings
+{
+  "tool": "rewrite_with_style_guide",
+  "document": "The utilisation of this process will be implemented by the department in order to facilitate improved outcomes for stakeholders.",
+  "targetAudience": "general-public"
+}
+```
+
+**Advanced Document Rewrite:**
+```json
+// Targeted improvements for specific areas  
+{
+  "tool": "rewrite_with_style_guide",
+  "document": "[Long government policy document]",
+  "focusAreas": ["plain-language", "structure", "inclusive-language"],
+  "targetAudience": "government-staff",
+  "explanation": true
+}
+```
+
+**Policy Document Review:**
+```json
+// Accessibility-focused rewrite
+{
+  "tool": "rewrite_with_style_guide", 
+  "document": "[Policy document with complex language]",
+  "focusAreas": ["accessibility", "plain-language", "structure"],
+  "targetAudience": "general-public"
+}
 ```
 
 
