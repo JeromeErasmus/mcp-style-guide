@@ -47,6 +47,76 @@ const FOCUS_AREA_URLS: Record<string, string[]> = {
   'spelling': [
     '/grammar-punctuation-and-conventions/spelling',
     '/grammar-punctuation-and-conventions/spelling/common-misspellings-and-word-confusion'
+  ],
+  'structuringContent': [
+    '/structuring-content/',
+    '/structuring-content/structure-content-information-architecture',
+    '/structuring-content/page-titles'
+  ],
+  'headings': [
+    '/structuring-content/headings',
+    '/structuring-content/headings/heading-hierarchy',
+    '/structuring-content/headings/descriptive-headings'
+  ],
+  'links': [
+    '/structuring-content/links',
+    '/structuring-content/links/link-text',
+    '/structuring-content/links/external-links'
+  ],
+  'lists': [
+    '/structuring-content/lists',
+    '/structuring-content/lists/bulleted-lists',
+    '/structuring-content/lists/numbered-lists'
+  ],
+  'paragraphs': [
+    '/structuring-content/paragraphs',
+    '/structuring-content/paragraphs/paragraph-length',
+    '/structuring-content/paragraphs/topic-sentences'
+  ],
+  'tables': [
+    '/structuring-content/tables',
+    '/structuring-content/tables/table-structure',
+    '/structuring-content/tables/table-headers'
+  ],
+  'sentences': [
+    '/writing-and-designing-content/clear-language-and-writing-style/sentences',
+    '/writing-and-designing-content/clear-language-and-writing-style/sentences/sentence-length',
+    '/writing-and-designing-content/clear-language-and-writing-style/sentences/sentence-structure'
+  ],
+  'howPeopleFindInfo': [
+    '/accessible-and-inclusive-content/how-people-read',
+    '/accessible-and-inclusive-content/how-people-read/scanning-and-reading-patterns',
+    '/accessible-and-inclusive-content/how-people-read/cognitive-load'
+  ],
+  'numeralsOrWords': [
+    '/grammar-punctuation-and-conventions/numbers',
+    '/grammar-punctuation-and-conventions/numbers/when-to-use-numerals-or-words',
+    '/grammar-punctuation-and-conventions/numbers/large-numbers'
+  ],
+  'currency': [
+    '/grammar-punctuation-and-conventions/numbers/currency',
+    '/grammar-punctuation-and-conventions/numbers/currency/australian-currency',
+    '/grammar-punctuation-and-conventions/numbers/currency/foreign-currency'
+  ],
+  'dateTime': [
+    '/grammar-punctuation-and-conventions/dates-and-time',
+    '/grammar-punctuation-and-conventions/dates-and-time/date-formats',
+    '/grammar-punctuation-and-conventions/dates-and-time/time-formats'
+  ],
+  'typesStructure': [
+    '/structuring-content/types-structure',
+    '/structuring-content/types-structure/introduction',
+    '/structuring-content/types-structure/body-structure'
+  ],
+  'hierarchicalStructure': [
+    '/structuring-content/types-structure/hierarchical-structure',
+    '/structuring-content/types-structure/hierarchical-structure/overview-to-detail',
+    '/structuring-content/types-structure/hierarchical-structure/category-structures'
+  ],
+  'sequentialStructure': [
+    '/structuring-content/types-structure/sequential-structure',
+    '/structuring-content/types-structure/sequential-structure/step-by-step',
+    '/structuring-content/types-structure/sequential-structure/process-flows'
   ]
 };
 
@@ -70,22 +140,76 @@ export const rewriteDocumentTool = {
       'grammar', 
       'accessibility', 
       'structure', 
-      'spelling'
-    ])).optional().describe("Specific style areas to focus on (default: all areas)"),
+      'spelling',
+      'structuringContent',
+      'headings',
+      'links',
+      'lists',
+      'paragraphs',
+      'tables',
+      'sentences',
+      'howPeopleFindInfo',
+      'numeralsOrWords',
+      'currency',
+      'dateTime',
+      'typesStructure',
+      'hierarchicalStructure',
+      'sequentialStructure'
+    ])).optional().default([
+      'plain-language', 
+      'active-voice', 
+      'structure', 
+      'accessibility', 
+      'inclusive-language',
+      'structuringContent',
+      'headings',
+      'links',
+      'lists',
+      'paragraphs',
+      'tables',
+      'sentences',
+      'howPeopleFindInfo',
+      'numeralsOrWords',
+      'currency',
+      'dateTime',
+      'typesStructure',
+      'hierarchicalStructure',
+      'sequentialStructure'
+    ]).describe("Specific style areas to focus on (default: comprehensive readability, structure, and formatting areas)"),
     targetAudience: z.enum(['general-public', 'government-staff', 'technical-audience']).optional().default('general-public').describe("Target audience for the rewrite"),
     explanation: z.boolean().optional().default(true).describe("Include explanation of changes made")
   }),
   
   handler: async ({ 
     document, 
-    focusAreas = ['plain-language', 'active-voice', 'punctuation', 'inclusive-language', 'accessibility'], 
+    focusAreas = [
+      'plain-language', 
+      'active-voice', 
+      'structure', 
+      'accessibility', 
+      'inclusive-language',
+      'structuringContent',
+      'headings',
+      'links',
+      'lists',
+      'paragraphs',
+      'tables',
+      'sentences',
+      'howPeopleFindInfo',
+      'numeralsOrWords',
+      'currency',
+      'dateTime',
+      'typesStructure',
+      'hierarchicalStructure',
+      'sequentialStructure'
+    ], 
     targetAudience = 'general-public',
     explanation = true 
   }: { 
     document: string; 
-    focusAreas?: ('plain-language' | 'active-voice' | 'punctuation' | 'inclusive-language' | 'grammar' | 'accessibility' | 'structure' | 'spelling')[] | undefined; 
-    targetAudience: 'general-public' | 'government-staff' | 'technical-audience';
-    explanation: boolean;
+    focusAreas?: ('plain-language' | 'active-voice' | 'punctuation' | 'inclusive-language' | 'grammar' | 'accessibility' | 'structure' | 'spelling' | 'structuringContent' | 'headings' | 'links' | 'lists' | 'paragraphs' | 'tables' | 'sentences' | 'howPeopleFindInfo' | 'numeralsOrWords' | 'currency' | 'dateTime' | 'typesStructure' | 'hierarchicalStructure' | 'sequentialStructure')[] | undefined; 
+    targetAudience?: 'general-public' | 'government-staff' | 'technical-audience' | undefined;
+    explanation?: boolean | undefined;
   }) => {
     try {
       // Import URL configuration
@@ -202,6 +326,90 @@ function generateRewriteInstructions(
     instructions.push("Write for accessibility and screen readers.");
     instructions.push("Use descriptive link text.");
     instructions.push("Ensure content is logical when read aloud.");
+  }
+  
+  if (focusAreas.includes('structuringContent')) {
+    instructions.push("Structure content with clear information architecture.");
+    instructions.push("Use logical content flow and organization.");
+    instructions.push("Provide meaningful page titles and section structure.");
+  }
+  
+  if (focusAreas.includes('headings')) {
+    instructions.push("Use descriptive, hierarchical headings (H1, H2, H3).");
+    instructions.push("Make headings informative and scannable.");
+    instructions.push("Follow proper heading hierarchy without skipping levels.");
+  }
+  
+  if (focusAreas.includes('links')) {
+    instructions.push("Use descriptive link text that explains the destination.");
+    instructions.push("Avoid generic link text like 'click here' or 'read more'.");
+    instructions.push("Clearly indicate external links when appropriate.");
+  }
+  
+  if (focusAreas.includes('lists')) {
+    instructions.push("Use bulleted lists for unordered items.");
+    instructions.push("Use numbered lists for sequential steps or priorities.");
+    instructions.push("Keep list items parallel in structure and length.");
+  }
+  
+  if (focusAreas.includes('paragraphs')) {
+    instructions.push("Keep paragraphs focused on one main idea.");
+    instructions.push("Limit paragraphs to 3-4 sentences maximum.");
+    instructions.push("Use topic sentences to introduce paragraph content.");
+  }
+  
+  if (focusAreas.includes('tables')) {
+    instructions.push("Use proper table headers and structure.");
+    instructions.push("Make table data scannable and accessible.");
+    instructions.push("Provide table captions when needed for context.");
+  }
+  
+  if (focusAreas.includes('sentences')) {
+    instructions.push("Write clear, concise sentences with optimal length.");
+    instructions.push("Use varied sentence structure to maintain engagement.");
+    instructions.push("Ensure each sentence has one main idea.");
+  }
+  
+  if (focusAreas.includes('howPeopleFindInfo')) {
+    instructions.push("Structure content for scanning and reading patterns.");
+    instructions.push("Reduce cognitive load with clear organization.");
+    instructions.push("Use front-loading technique - put key information first.");
+  }
+  
+  if (focusAreas.includes('numeralsOrWords')) {
+    instructions.push("Use numerals for numbers 10 and above, words for numbers below 10.");
+    instructions.push("Follow Australian conventions for large numbers and measurements.");
+    instructions.push("Be consistent with number formatting throughout the document.");
+  }
+  
+  if (focusAreas.includes('currency')) {
+    instructions.push("Use Australian currency formats ($ before amount, no spaces).");
+    instructions.push("Clearly indicate foreign currencies when referenced.");
+    instructions.push("Follow government standards for financial amounts.");
+  }
+  
+  if (focusAreas.includes('dateTime')) {
+    instructions.push("Use clear, unambiguous date formats (DD Month YYYY).");
+    instructions.push("Follow Australian date and time conventions.");
+    instructions.push("Ensure dates are accessible and internationally understood.");
+  }
+  
+  if (focusAreas.includes('typesStructure')) {
+    instructions.push("Choose appropriate content structure type for the information.");
+    instructions.push("Use clear introduction and body structure patterns.");
+    instructions.push("Match structure to user needs and information type.");
+  }
+  
+  if (focusAreas.includes('hierarchicalStructure')) {
+    instructions.push("Organize content from overview to detail (hierarchical).");
+    instructions.push("Use category-based structures where appropriate.");
+    instructions.push("Create clear information hierarchies that guide users.");
+  }
+  
+  if (focusAreas.includes('sequentialStructure')) {
+    instructions.push("Use step-by-step structure for processes and procedures.");
+    instructions.push("Create clear process flows and sequential information.");
+    instructions.push("Number steps and use logical ordering for tasks.");
   }
   
   // Audience-specific adjustments

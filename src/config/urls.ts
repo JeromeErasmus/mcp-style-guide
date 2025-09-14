@@ -5,17 +5,6 @@ export const STYLE_MANUAL_BASE_URL = 'https://www.stylemanual.gov.au';
 
 // URI paths for all Style Manual pages
 export const STYLE_MANUAL_URLS: Record<string, string> = {
-  // Core sections
-  homepage: '/',
-  
-  // About Style Manual
-  aboutStyleManual: '/about-style-manual',
-  acknowledgements: '/about-style-manual/acknowledgements',
-  changelog: '/about-style-manual/changelog',
-  forewordGorman: '/about-style-manual/foreword-hon-patrick-gorman-mp',
-  howToCite: '/about-style-manual/how-cite-style-manual',
-  howToUse: '/about-style-manual/how-use-style-manual',
-  videoTranscript: '/about-style-manual/how-use-style-manual/video-transcript',
   
   // Writing and designing content
   writingContent: '/writing-and-designing-content/',

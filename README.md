@@ -162,24 +162,38 @@ Rewrite documents using Australian Style Manual guidelines for clarity, accessib
 ```json
 {
   "document": "Your document text here...",
-  "focusAreas": ["plain-language", "active-voice", "punctuation", "inclusive-language", "accessibility"],
+  "focusAreas": ["plain-language", "active-voice", "structure", "accessibility", "inclusive-language", "structuringContent", "headings", "links", "lists", "paragraphs", "tables", "sentences", "howPeopleFindInfo", "numeralsOrWords", "currency", "dateTime", "typesStructure", "hierarchicalStructure", "sequentialStructure"],
   "targetAudience": "general-public", 
   "explanation": true
 }
 ```
 
-**Focus Areas (optional):**
-- `plain-language`: Year 7 reading level, simple words
-- `active-voice`: Convert passive to active voice  
+**Focus Areas (defaults to comprehensive readability, structure, and formatting areas):**
+- `plain-language`: Year 7 reading level, simple words *(default)*
+- `active-voice`: Convert passive to active voice *(default)*
+- `structure`: Improve headings, paragraphs, and lists *(default)*
+- `accessibility`: Optimize for screen readers and disabilities *(default)*
+- `inclusive-language`: Remove bias and discriminatory language *(default)*
+- `structuringContent`: Content architecture and organization *(default)*
+- `headings`: Descriptive, hierarchical heading structure *(default)*
+- `links`: Descriptive link text and external link handling *(default)*
+- `lists`: Proper bulleted and numbered list formatting *(default)*
+- `paragraphs`: Focus and length optimization *(default)*
+- `tables`: Accessible table structure and headers *(default)*
+- `sentences`: Clear, concise sentence structure and length *(default)*
+- `howPeopleFindInfo`: Scanning patterns and cognitive load reduction *(default)*
+- `numeralsOrWords`: Number formatting and numeral conventions *(default)*
+- `currency`: Australian currency formats and standards *(default)*
+- `dateTime`: Clear date and time formatting *(default)*
+- `typesStructure`: Appropriate content structure selection *(default)*
+- `hierarchicalStructure`: Overview-to-detail organization *(default)*
+- `sequentialStructure`: Step-by-step and process structures *(default)*
 - `punctuation`: Fix punctuation and grammar
-- `inclusive-language`: Remove bias and discriminatory language
 - `grammar`: Improve sentence structure and word choice
-- `accessibility`: Optimize for screen readers and disabilities
-- `structure`: Improve headings, paragraphs, and lists
 - `spelling`: Fix common misspellings and word confusion
 
 **Target Audiences:**
-- `general-public`: Simplest language, no jargon (default)
+- `general-public`: Simplest language, no jargon *(default)*
 - `government-staff`: Some department terms acceptable
 - `technical-audience`: Technical terms allowed when appropriate
 
