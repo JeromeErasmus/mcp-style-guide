@@ -14,7 +14,10 @@ export const downloadAllTool = {
   }),
   handler: async ({ outputDir }: { outputDir: string }) => {
     try {
-      const { STYLE_MANUAL_URLS } = await import('../config/urls.js') as { STYLE_MANUAL_URLS: Record<string, string> };
+      const { STYLE_MANUAL_URLS, getFullUrl } = await import('../config/urls.js') as { 
+        STYLE_MANUAL_URLS: Record<string, string>; 
+        getFullUrl: (uriPath: string) => string;
+      };
       const batchProcessor = new BatchProcessor();
       const extractor = new StyleManualExtractor();
       
@@ -23,7 +26,8 @@ export const downloadAllTool = {
       await fs.mkdir(`${outputDir}/search-index`, { recursive: true });
       await fs.mkdir(`${outputDir}/metadata`, { recursive: true });
       
-      const allUrls = Object.values(STYLE_MANUAL_URLS) as string[];
+      // Convert URI paths to full URLs
+      const allUrls = Object.values(STYLE_MANUAL_URLS).map((uriPath: string) => getFullUrl(uriPath));
       const results = await batchProcessor.processUrlsInBatches(
         allUrls,
         async (url) => {
