@@ -59,7 +59,7 @@ yarn build
 
 **Claude Code:** Uses `download_all_content({ outputDir: "./style-manual" })`
 
-**Result:** Creates organized local files for instant access
+**Result:** Creates 160+ organized local files for instant access
 
 ### 2. Daily Usage (Lightning Fast)
 
@@ -125,7 +125,16 @@ style-manual/
 │   ├── grammar-punctuation.md
 │   ├── accessible-content.md
 │   ├── writing-guidelines.md
-│   └── ... (15+ files)
+│   ├── plain-language-and-word-choice.md
+│   ├── sentences.md
+│   ├── punctuation-and-capitalisation.md
+│   ├── apostrophes.md
+│   ├── commas.md
+│   ├── lists.md
+│   ├── headings.md
+│   ├── links.md
+│   ├── tables.md
+│   └── ... (160+ comprehensive files)
 ├── search-index/              # Navigation aids
 └── metadata/                  # Update tracking
 ```
@@ -267,12 +276,15 @@ download_all_content({ outputDir: "./style-manual" })
 
 ## Configuration
 
-URLs are configured in `src/config/urls.js`. The default set includes:
-- Writing and designing content
-- Grammar, punctuation, and conventions  
-- Accessible and inclusive content
-- Formatting guidelines
-- 15+ comprehensive style guide pages
+URLs are configured in `src/config/urls.ts`. The comprehensive set includes:
+- **Writing and designing content** (12 pages) - User research, plain language, voice & tone, findability
+- **Accessible and inclusive content** (11 pages) - Accessibility principles, inclusive language, literacy  
+- **Grammar, punctuation and conventions** (82 pages) - All word types, punctuation, numbers, names, titles
+- **Content types** (11 pages) - Blogs, PDFs, forms, images, video/audio, social media
+- **Structuring content** (10 pages) - Headings, links, lists, paragraphs, tables, content structures
+- **Referencing and attribution** (16 pages) - Citation styles, legal material, documentary notes
+- **Style Manual resources** (17+ pages) - Quick guides, Government Writing Handbook, editor's tips
+- **Total: 160+ comprehensive style guide pages**
 
 ## Usage Examples
 

@@ -7,13 +7,11 @@ export const STYLE_MANUAL_BASE_URL = 'https://www.stylemanual.gov.au';
 export const STYLE_MANUAL_URLS: Record<string, string> = {
   
   // Writing and designing content
-  writingContent: '/writing-and-designing-content/',
   userResearch: '/writing-and-designing-content/user-research-and-content',
   clearLanguage: '/writing-and-designing-content/clear-language-and-writing-style',
   plainLanguage: '/writing-and-designing-content/clear-language-and-writing-style/plain-language-and-word-choice',
   sentences: '/writing-and-designing-content/clear-language-and-writing-style/sentences',
   voiceAndTone: '/writing-and-designing-content/clear-language-and-writing-style/voice-and-tone',
-  findableContent: '/writing-and-designing-content/findable-content',
   howPeopleFindInfo: '/writing-and-designing-content/findable-content/how-people-find-information',
   understandingSearchEngines: '/writing-and-designing-content/findable-content/understanding-search-engines',
   keywordsAndSearch: '/writing-and-designing-content/findable-content/keywords-and-search-engines',
@@ -22,14 +20,12 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   securityClassifications: '/writing-and-designing-content/security-classifications-and-protective-markings',
   
   // Accessible and inclusive content
-  accessibleContent: '/accessible-and-inclusive-content/',
   makeContentAccessible: '/accessible-and-inclusive-content/make-content-accessible',
   agencyResponsibilities: '/accessible-and-inclusive-content/agency-responsibilities-and-commitments',
   applyAccessibilityPrinciples: '/accessible-and-inclusive-content/apply-accessibility-principles',
   designForAccessibility: '/accessible-and-inclusive-content/design-accessibility-and-inclusion',
   literacyAndAccess: '/accessible-and-inclusive-content/literacy-and-access',
   howPeopleRead: '/accessible-and-inclusive-content/how-people-read',
-  inclusiveLanguage: '/accessible-and-inclusive-content/inclusive-language/',
   aboriginalTorresStrait: '/accessible-and-inclusive-content/inclusive-language/aboriginal-and-torres-strait-islander-peoples',
   ageDiversity: '/accessible-and-inclusive-content/inclusive-language/age-diversity',
   culturalLinguisticDiversity: '/accessible-and-inclusive-content/inclusive-language/cultural-and-linguistic-diversity',
@@ -37,8 +33,6 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   genderSexualDiversity: '/accessible-and-inclusive-content/inclusive-language/gender-and-sexual-diversity',
   
   // Grammar, punctuation and conventions
-  grammarPunctuation: '/grammar-punctuation-and-conventions/',
-  typesOfWords: '/grammar-punctuation-and-conventions/types-words',
   adjectives: '/grammar-punctuation-and-conventions/types-words/adjectives',
   adverbs: '/grammar-punctuation-and-conventions/types-words/adverbs',
   conjunctions: '/grammar-punctuation-and-conventions/types-words/conjunctions',
@@ -47,10 +41,8 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   prepositions: '/grammar-punctuation-and-conventions/types-words/prepositions',
   pronouns: '/grammar-punctuation-and-conventions/types-words/pronouns',
   verbs: '/grammar-punctuation-and-conventions/types-words/verbs',
-  partsSentences: '/grammar-punctuation-and-conventions/parts-sentences',
   clauses: '/grammar-punctuation-and-conventions/parts-sentences/clauses',
   phrases: '/grammar-punctuation-and-conventions/parts-sentences/phrases',
-  punctuation: '/grammar-punctuation-and-conventions/punctuation/',
   punctuationCapitalisation: '/grammar-punctuation-and-conventions/punctuation/punctuation-and-capitalisation',
   apostrophes: '/grammar-punctuation-and-conventions/punctuation/apostrophes',
   bracketsParentheses: '/grammar-punctuation-and-conventions/punctuation/brackets-and-parentheses',
@@ -65,9 +57,7 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   questionMarks: '/grammar-punctuation-and-conventions/punctuation/question-marks',
   quotationMarks: '/grammar-punctuation-and-conventions/punctuation/quotation-marks',
   semicolons: '/grammar-punctuation-and-conventions/punctuation/semicolons',
-  spelling: '/grammar-punctuation-and-conventions/spelling',
   commonMisspellings: '/grammar-punctuation-and-conventions/spelling/common-misspellings-and-word-confusion',
-  shortenedWords: '/grammar-punctuation-and-conventions/shortened-words-and-phrases',
   abbreviations: '/grammar-punctuation-and-conventions/shortened-words-and-phrases/abbreviations',
   acronymsInitialisms: '/grammar-punctuation-and-conventions/shortened-words-and-phrases/acronyms-and-initialisms',
   contractions: '/grammar-punctuation-and-conventions/shortened-words-and-phrases/contractions',
@@ -105,7 +95,6 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   royaltyViceRoyalty: '/grammar-punctuation-and-conventions/titles-honours-forms-address/royalty-vice-royalty-and-nobility',
   
   // Content types
-  contentTypes: '/content-types',
   blogs: '/content-types/blogs',
   easyRead: '/content-types/easy-read',
   emailsLetters: '/content-types/emails-and-letters',
@@ -120,7 +109,6 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   videoAudioRequirements: '/content-types/video-and-audio/requirements-and-standards-video-and-audio',
   
   // Structuring content
-  structuringContent: '/structuring-content',
   headings: '/structuring-content/headings',
   links: '/structuring-content/links',
   lists: '/structuring-content/lists',
@@ -134,7 +122,6 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   sequentialStructure: '/structuring-content/types-structure/sequential-structure',
   
   // Referencing and attribution
-  referencingAttribution: '/referencing-and-attribution',
   authorDate: '/referencing-and-attribution/author-date',
   broadcastMediaPodcasts: '/referencing-and-attribution/author-date/broadcast-media-and-podcasts-film-video-television-and-radio-programs',
   classics: '/referencing-and-attribution/author-date/classics',
@@ -153,7 +140,6 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   shortenedFormsReferencing: '/referencing-and-attribution/shortened-forms-used-referencing',
   
   // Style Manual resources
-  styleManualResources: '/style-manual-resources',
   blog: '/style-manual-resources/blog',
   trainingDevelopment: '/style-manual-resources/training-and-professional-development',
   quickGuides: '/style-manual-resources/quick-guides',
@@ -165,7 +151,6 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   quickGuideSpelling: '/style-manual-resources/quick-guides/quick-guide-spelling-capitals-links-and-dashes',
   
   // Government Writing Handbook
-  governmentWritingHandbook: '/style-manual-resources/government-writing-handbook',
   accessiblePdf: '/style-manual-resources/government-writing-handbook/accessible-pdf',
   afterword: '/style-manual-resources/government-writing-handbook/afterword',
   frontMatter: '/style-manual-resources/government-writing-handbook/front-matter',
@@ -174,7 +159,6 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   howCitePublication: '/style-manual-resources/government-writing-handbook/front-matter/how-cite-publication',
   handbookIntroduction: '/style-manual-resources/government-writing-handbook/front-matter/introduction',
   noteTerminology: '/style-manual-resources/government-writing-handbook/front-matter/note-terminology',
-  writeForReaders: '/style-manual-resources/government-writing-handbook/section-1-write-your-readers',
   makeArgument: '/style-manual-resources/government-writing-handbook/section-1-write-your-readers/make-argument',
   mechanicsWriting: '/style-manual-resources/government-writing-handbook/section-1-write-your-readers/mechanics-writing',
   relateReaders: '/style-manual-resources/government-writing-handbook/section-1-write-your-readers/relate-your-readers',
@@ -188,7 +172,6 @@ export const STYLE_MANUAL_URLS: Record<string, string> = {
   useStructureReadable: '/style-manual-resources/government-writing-handbook/section-2-write-so-your-meaning-clear/use-structure-make-it-readable-bullet-lists',
   
   // Editor's Tips
-  editorsTips: '/style-manual-resources/government-writing-handbook/editors-tips',
   activePassiveVoice: '/style-manual-resources/government-writing-handbook/editors-tips/active-and-passive-voice',
   alwaysUseAustralianDictionary: '/style-manual-resources/government-writing-handbook/editors-tips/always-use-australian-dictionary',
   tipsHeadings: '/style-manual-resources/government-writing-handbook/editors-tips/headings',
