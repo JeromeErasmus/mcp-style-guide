@@ -22,27 +22,31 @@ A Model Context Protocol (MCP) server that provides Claude with access to the Au
 
 ### NPM Package Install (Recommended)
 
-**Install directly from npm:**
+**1. Install the package from npm:**
 ```bash
-npx australian-style-manual-mcp
+npm install -g australian-style-manual-mcp
 ```
 
-**Add to Claude Code MCP configuration (`~/.config/claude-code/mcp_settings.json`):**
+**2. Edit the configuration file:**
+```bash
+code ~/.config/claude/settings.json
+```
+
+**3. Add the server configuration to the `"mcp"` → `"servers"` section:**
 ```json
 {
-  "mcpServers": {
-    "australian-style-manual": {
-      "command": "npx",
-      "args": ["australian-style-manual-mcp"]
+  "mcp": {
+    "servers": {
+      "australian-style-manual": {
+        "command": "npx",
+        "args": ["australian-style-manual-mcp"]
+      }
     }
   }
 }
 ```
 
-**Or use Claude Code CLI:**
-```bash
-claude-code config add-mcp-server australian-style-manual npx australian-style-manual-mcp
-```
+**4. Restart Claude Code**
 
 ### Development Install (Local)
 
@@ -55,13 +59,17 @@ yarn install
 yarn build
 ```
 
-**Add to Claude Code MCP configuration:**
+**Add to Claude Code MCP configuration (`~/.config/claude/settings.json`):**
+
+Add this to the `"mcp"` → `"servers"` section:
 ```json
 {
-  "mcpServers": {
-    "australian-style-manual": {
-      "command": "node",
-      "args": ["/absolute/path/to/mcp-style-guide/dist/server.js"]
+  "mcp": {
+    "servers": {
+      "australian-style-manual": {
+        "command": "node",
+        "args": ["/absolute/path/to/mcp-style-guide/dist/server.js"]
+      }
     }
   }
 }
