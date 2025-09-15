@@ -5,26 +5,39 @@ import { BatchProcessor } from '../processing/batch-processor.js';
 import { formatAsMarkdown, generateFilename, generateIndexFiles } from '../utils/formatters.js';
 import { handleToolError } from '../utils/errors.js';
 import { DownloadResult } from '../types/index.js';
+import { GlobalCache } from '../utils/cache.js';
 
 export const downloadAllTool = {
   name: "download_all_content",
-  description: "Download all configured Style Manual pages to local markdown files",
+  description: "Download all configured Style Manual pages to global cache for reuse across projects",
   inputSchema: z.object({
-    outputDir: z.string()
+    forceRefresh: z.boolean().optional().default(false)
   }),
-  handler: async ({ outputDir }: { outputDir: string }) => {
+  handler: async ({ forceRefresh = false }: { forceRefresh?: boolean }) => {
     try {
       const { STYLE_MANUAL_URLS, getFullUrl } = await import('../config/urls.js') as { 
         STYLE_MANUAL_URLS: Record<string, string>; 
         getFullUrl: (uriPath: string) => string;
       };
+      
+      const cache = new GlobalCache();
+      
+      // Check if cache is already populated and we don't need to force refresh
+      if (!forceRefresh && await cache.isCachePopulated()) {
+        const cachedFiles = await cache.getAllCachedFiles();
+        return {
+          content: [{ 
+            type: "text" as const, 
+            text: `Cache already contains ${cachedFiles.length} pages at ${cache.cachePath}. Use forceRefresh=true to re-download.` 
+          }]
+        };
+      }
+      
       const batchProcessor = new BatchProcessor();
       const extractor = new StyleManualExtractor();
       
-      // Create organized directory structure
-      await fs.mkdir(`${outputDir}/sections`, { recursive: true });
-      await fs.mkdir(`${outputDir}/search-index`, { recursive: true });
-      await fs.mkdir(`${outputDir}/metadata`, { recursive: true });
+      // Ensure cache directories exist
+      await cache.ensureCacheDirectories();
       
       // Convert URI paths to full URLs
       const allUrls = Object.values(STYLE_MANUAL_URLS).map((uriPath: string) => getFullUrl(uriPath));
@@ -34,7 +47,7 @@ export const downloadAllTool = {
           try {
             const content = await extractor.extractPageContent(url);
             const filename = generateFilename(url);
-            const filepath = `${outputDir}/sections/${filename}`;
+            const filepath = `${cache.sectionPath}/${filename}`;
             const markdown = formatAsMarkdown(content);
             
             await fs.writeFile(filepath, markdown, 'utf8');
@@ -54,18 +67,24 @@ export const downloadAllTool = {
       // Filter successful results for index generation  
       const successfulResults = results.filter((r): r is DownloadResult => r !== null && r !== undefined && r.success);
       
-      // Generate index files
-      await generateIndexFiles(outputDir, successfulResults);
+      // Generate index files in cache
+      await generateIndexFiles(cache.cachePath, successfulResults);
+      
+      // Update cache info
+      await cache.updateCacheInfo({
+        lastUpdated: new Date().toISOString(),
+        version: '1.0.0'
+      });
       
       const summary = {
         total: results.length,
         successful: successfulResults.length,
         failed: results.length - successfulResults.length,
-        outputDirectory: outputDir
+        cacheDirectory: cache.cachePath
       };
       
       return {
-        content: [{ type: "text" as const, text: `Downloaded ${summary.successful}/${summary.total} pages to ${outputDir}` }]
+        content: [{ type: "text" as const, text: `Downloaded ${summary.successful}/${summary.total} pages to global cache at ${summary.cacheDirectory}` }]
       };
     } catch (error) {
       return handleToolError(error);

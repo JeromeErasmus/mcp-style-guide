@@ -46,7 +46,7 @@ server.registerTool(
     title: "Download All Style Manual Content",
     description: downloadAllTool.description,
     inputSchema: {
-      outputDir: z.string()
+      forceRefresh: z.boolean().optional().default(false)
     }
   },
   downloadAllTool.handler

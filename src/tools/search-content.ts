@@ -5,6 +5,8 @@ import { BatchProcessor } from '../processing/batch-processor.js';
 import { formatSearchResults } from '../utils/formatters.js';
 import { handleToolError } from '../utils/errors.js';
 import { ToolError } from '../types/index.js';
+import { GlobalCache } from '../utils/cache.js';
+import { generateFilename } from '../utils/formatters.js';
 
 export const searchContentTool = {
   name: "search_style_content",
@@ -30,8 +32,57 @@ export const searchContentTool = {
         throw new ToolError(`Invalid URLs (must be from stylemanual.gov.au): ${invalidUrls.join(', ')}`);
       }
       
-      const batchProcessor = new BatchProcessor();
+      const cache = new GlobalCache();
       const searcher = new SimpleSearch();
+      
+      // Try to use cache first if it's available
+      if (await cache.isCachePopulated()) {
+        const results = [];
+        
+        // When using cache, search ALL cached files, not just the search URLs
+        // This provides more comprehensive results since all content is available
+        const cachedFiles = await cache.getAllCachedFiles();
+        
+        for (const filename of cachedFiles) {
+          const cachedContent = await cache.getCachedFile(filename);
+          
+          if (cachedContent) {
+            // Parse cached markdown to extract content for search
+            const lines = cachedContent.split('\n');
+            const titleMatch = lines.find(line => line.startsWith('# '));
+            const title = titleMatch ? titleMatch.replace('# ', '') : filename.replace('.md', '');
+            
+            // Extract URL from the cached content (it should be in the Source line)
+            const sourceMatch = lines.find(line => line.startsWith('**Source:**'));
+            const url = sourceMatch 
+              ? sourceMatch.replace('**Source:** ', '').trim()
+              : `https://www.stylemanual.gov.au/${filename.replace('.md', '')}`;
+            
+            const content = {
+              title,
+              url,
+              content: cachedContent,
+              sections: [],
+              lastFetched: new Date()
+            };
+            
+            const matches = searcher.findMatches(content, query);
+            if (matches.length > 0) {
+              results.push({ url, matches });
+            }
+          }
+        }
+        
+        if (results.length > 0) {
+          const markdown = formatSearchResults(results, query);
+          return {
+            content: [{ type: "text" as const, text: `${markdown}\n\n*Results from cached content*` }]
+          };
+        }
+      }
+      
+      // Fallback to web fetching if cache is not available or no results
+      const batchProcessor = new BatchProcessor();
       
       const results = await batchProcessor.processUrlsInBatches(
         searchUrls,
@@ -49,7 +100,7 @@ export const searchContentTool = {
       
       const markdown = formatSearchResults(validResults, query);
       return {
-        content: [{ type: "text" as const, text: markdown }]
+        content: [{ type: "text" as const, text: `${markdown}\n\n*Results from live web fetch*` }]
       };
     } catch (error) {
       return handleToolError(error);

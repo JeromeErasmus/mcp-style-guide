@@ -8,12 +8,15 @@ A Model Context Protocol (MCP) server that provides Claude with access to the Au
 
 ## Features
 
-- **Hybrid approach**: Download content once, search locally with Claude Code's native tools
+- **Global cache system**: Download content once, automatically reused across all projects
+- **Permanent storage**: Downloaded files persist forever until manually refreshed
 - **Four MCP tools**:
   - `fetch_style_page`: Fetch individual pages from the Style Manual
-  - `search_style_content`: Search across multiple pages for specific terms
-  - `download_all_content`: Bulk download all configured pages to local markdown files
+  - `search_style_content`: Search across ALL cached content instantly (155+ pages)
+  - `download_all_content`: Bulk download to global cache for universal access
   - `rewrite_with_style_guide`: Rewrite documents using Style Manual guidelines
+- **Zero project clutter**: No files created in user project directories
+- **Lightning-fast searches**: Instant results from cached content
 - **Respectful scraping**: Built-in rate limiting and batch processing
 - **Domain validation**: Only allows URLs from stylemanual.gov.au
 - **Rich markdown output**: Properly formatted content with sections and navigation
@@ -96,38 +99,35 @@ npx australian-style-manual-mcp --help
 
 ## How It Works
 
-### 1. Download Content (One Time)
+### 1. Download Content (One Time Setup)
 
-**You:** "Download all Australian Style Manual content for offline use"
+**You:** "Download all Australian Style Manual content"
 
-**Claude Code:** Uses `download_all_content({ outputDir: "./style-manual" })`
+**Claude Code:** Uses `download_all_content({ forceRefresh: false })`
 
-**Result:** Creates 160+ organized local files for instant access
+**Result:** Creates global cache with 155+ pages accessible from any project
 
-### 2. Daily Usage (Lightning Fast)
+**Cache Location:** `<mcp-server>/cache/` (automatically managed, no user interaction needed)
+
+### 2. Daily Usage (Instant Results)
 
 **Scenario: "How do I use semicolons in government writing?"**
 
-**Claude Code workflow:**
-```bash
-# Instant local search (no network calls)
-grep -i "semicolon" style-manual/sections/*.md
-```
+**Claude Code:** Uses `search_style_content({ query: "semicolon" })`
 
-**Scenario: "Show me accessibility guidelines"**
+**Result:** Instant search across ALL 155+ cached pages (no network calls)
 
-**Claude Code workflow:**
-```bash
-glob "style-manual/sections/*accessibility*.md"
-read style-manual/sections/accessible-inclusive-content.md
-```
+**Scenario: "Show me accessibility guidelines"** 
+
+**Claude Code:** Uses `search_style_content({ query: "accessibility" })`
+
+**Result:** Comprehensive results from cached accessibility pages
 
 **Scenario: "Find all mentions of 'plain English'"**
 
-**Claude Code workflow:**
-```bash
-grep -i -C 3 "plain english" style-manual/sections/*.md
-```
+**Claude Code:** Uses `search_style_content({ query: "plain english" })`
+
+**Result:** All relevant content instantly available
 
 ### 3. Targeted Updates
 
@@ -151,20 +151,23 @@ grep -i -C 3 "plain english" style-manual/sections/*.md
 ## MCP Tools Reference
 
 ### `download_all_content` (Primary Tool)
-Bulk download all Style Manual pages for offline use.
+Download all Style Manual pages to permanent global cache.
 
-**When to use:** Initial setup, monthly refreshes
+**When to use:** Initial setup, or when forcing content refresh
 
 **Input:**
 ```json
-{ "outputDir": "./style-manual" }
+{ "forceRefresh": false }
 ```
 
-**Output Structure:**
+**Parameters:**
+- `forceRefresh` *(optional, default: false)*: Force re-download even if cache exists
+
+**Global Cache Structure:**
 ```
-style-manual/
+<mcp-server>/cache/
 ├── index.md                    # Quick reference guide
-├── sections/
+├── sections/                   # 155+ content pages
 │   ├── grammar-punctuation.md
 │   ├── accessible-content.md
 │   ├── writing-guidelines.md
@@ -177,10 +180,16 @@ style-manual/
 │   ├── headings.md
 │   ├── links.md
 │   ├── tables.md
-│   └── ... (160+ comprehensive files)
-├── search-index/              # Navigation aids
+│   └── ... (all Style Manual pages)
+├── search-index/              # Keywords and topics
 └── metadata/                  # Update tracking
 ```
+
+**Benefits:**
+- ✅ **Zero project clutter**: No files in user directories
+- ✅ **Universal access**: Works across all projects 
+- ✅ **Permanent storage**: Downloaded once, available forever
+- ✅ **Automatic reuse**: Subsequent projects use existing cache
 
 ### `fetch_style_page` (Targeted Updates)
 Fetch individual pages from the Style Manual.
@@ -193,17 +202,22 @@ Fetch individual pages from the Style Manual.
 ```
 
 ### `search_style_content` (Research)
-Search across multiple pages for specific terms.
+Search across ALL cached content instantly (155+ pages).
 
-**When to use:** Complex queries across specific sections
+**When to use:** Any content search - automatically uses cache when available
 
 **Input:**
 ```json
 { 
   "query": "plain English",
-  "urls": ["optional array of specific URLs"]
+  "urls": ["optional array of specific URLs - falls back to web if cache unavailable"]
 }
 ```
+
+**Cache Behavior:**
+- ✅ **Cache available**: Searches ALL 155+ cached pages instantly
+- ⚠️ **No cache**: Falls back to web search with specified URLs
+- 🔍 **Comprehensive**: Searches entire Style Manual when cached
 
 ### `rewrite_with_style_guide` (Document Improvement)
 Rewrite documents using Australian Style Manual guidelines for clarity, accessibility, and government standards. **Supports both direct content and file input/output**.
@@ -305,16 +319,18 @@ Rewrite documents using Australian Style Manual guidelines for clarity, accessib
 ## Typical Workflow
 
 ```bash
-# Initial setup (once)
-download_all_content({ outputDir: "./style-manual" })
+# Initial setup (once per MCP server installation)
+download_all_content({ forceRefresh: false })
+# → Creates permanent global cache
 
-# Daily usage (instant)
-grep "term" style-manual/sections/*.md
-read style-manual/sections/specific-file.md
-glob "**/pattern*.md"
+# Daily usage (instant from cache)
+search_style_content({ query: "semicolons" })
+search_style_content({ query: "accessibility guidelines" })
+search_style_content({ query: "plain language" })
 
-# Refresh (monthly)
-download_all_content({ outputDir: "./style-manual" })
+# Manual refresh (only when needed)
+download_all_content({ forceRefresh: true })
+# → Force re-download latest content
 ```
 
 ## Configuration
@@ -332,21 +348,21 @@ URLs are configured in `src/config/urls.ts`. The comprehensive set includes:
 ## Usage Examples
 
 **Writing a Press Release:**
-```bash
-grep -i -A 10 "press release\|media" style-manual/sections/*.md
-grep -i "tone\|voice" style-manual/sections/writing-*.md
-read style-manual/sections/accessible-inclusive-content.md
+```json
+search_style_content({ query: "press release media" })
+search_style_content({ query: "tone voice" })
+search_style_content({ query: "accessible inclusive content" })
 ```
 
 **Checking Punctuation:**
-```bash
-grep -i -C 5 "apostrophe\|semicolon" style-manual/sections/*.md
+```json
+search_style_content({ query: "apostrophe semicolon" })
 ```
 
 **Finding Guidelines:**
-```bash
-grep -i -A 15 "acronym" style-manual/sections/*.md
-glob "**/accessibility*.md"
+```json
+search_style_content({ query: "acronym" })
+search_style_content({ query: "accessibility" })
 ```
 
 **Simple Document Rewrite:**
