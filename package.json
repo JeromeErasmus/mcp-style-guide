@@ -1,6 +1,6 @@
 {
   "name": "australian-style-manual-mcp",
-  "version": "1.1.1",
+  "version": "1.1.2-debug",
   "description": "MCP server for Australian Government Style Manual reference tool",
   "type": "module",
   "main": "dist/server.js",
