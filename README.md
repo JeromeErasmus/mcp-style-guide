@@ -34,7 +34,7 @@ npm install -g mcp-australian-style-manual
 
 **Option A: Using Claude CLI (Recommended):**
 ```bash
-claude mcp add-json --scope user australian-style-manual '{"command":"npx","args":["mcp-australian-style-manual"]}'
+claude mcp add --scope user australian-style-manual npx mcp-australian-style-manual
 ```
 
 **Option B: Manual configuration file edit:**
@@ -95,6 +95,20 @@ npm install -g mcp-australian-style-manual
 **Quick test without install:**
 ```bash
 npx mcp-australian-style-manual --help
+```
+
+## Uninstall
+
+To completely remove the MCP server:
+
+**1. Remove from Claude configuration:**
+```bash
+claude mcp remove australian-style-manual
+```
+
+**2. Uninstall the npm package:**
+```bash
+npm uninstall -g mcp-australian-style-manual
 ```
 
 ## How It Works
