@@ -193,13 +193,13 @@ export function getFullUrl(uriPath: string): string {
 
 // Default URLs for search when none specified
 export const DEFAULT_SEARCH_URLS: string[] = [
-  getFullUrl(STYLE_MANUAL_URLS.writingContent),
-  getFullUrl(STYLE_MANUAL_URLS.grammarPunctuation),
-  getFullUrl(STYLE_MANUAL_URLS.accessibleContent),
-  getFullUrl(STYLE_MANUAL_URLS.punctuation),
-  getFullUrl(STYLE_MANUAL_URLS.inclusiveLanguage),
   getFullUrl(STYLE_MANUAL_URLS.clearLanguage),
-  getFullUrl(STYLE_MANUAL_URLS.plainLanguage)
+  getFullUrl(STYLE_MANUAL_URLS.punctuationCapitalisation),
+  getFullUrl(STYLE_MANUAL_URLS.makeContentAccessible),
+  getFullUrl(STYLE_MANUAL_URLS.genderSexualDiversity),
+  getFullUrl(STYLE_MANUAL_URLS.plainLanguage),
+  getFullUrl(STYLE_MANUAL_URLS.headings),
+  getFullUrl(STYLE_MANUAL_URLS.lists)
 ];
 
 // URL validation

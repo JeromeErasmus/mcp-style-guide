@@ -5,119 +5,96 @@ import { SimpleSearch } from '../search/simple-search.js';
 import { formatAsMarkdown } from '../utils/formatters.js';
 import { handleToolError } from '../utils/errors.js';
 import { ToolError } from '../types/index.js';
+import { STYLE_MANUAL_URLS } from '../config/urls.js';
 
-// Style focus area mappings to Style Manual URLs
+// Style focus area mappings to Style Manual URLs from configuration
 const FOCUS_AREA_URLS: Record<string, string[]> = {
   'plain-language': [
-    '/writing-and-designing-content/clear-language-and-writing-style/plain-language-and-word-choice',
-    '/writing-and-designing-content/clear-language-and-writing-style/sentences',
-    '/accessible-and-inclusive-content/literacy-and-access'
+    STYLE_MANUAL_URLS.plainLanguage,
+    STYLE_MANUAL_URLS.sentences,
+    STYLE_MANUAL_URLS.literacyAndAccess
   ],
   'active-voice': [
-    '/writing-and-designing-content/clear-language-and-writing-style/voice-and-tone',
-    '/writing-and-designing-content/clear-language-and-writing-style/sentences'
+    STYLE_MANUAL_URLS.voiceAndTone,
+    STYLE_MANUAL_URLS.sentences
   ],
   'punctuation': [
-    '/grammar-punctuation-and-conventions/punctuation/',
-    '/grammar-punctuation-and-conventions/punctuation/commas',
-    '/grammar-punctuation-and-conventions/punctuation/apostrophes',
-    '/grammar-punctuation-and-conventions/punctuation/quotation-marks'
+    STYLE_MANUAL_URLS.punctuationCapitalisation,
+    STYLE_MANUAL_URLS.commas,
+    STYLE_MANUAL_URLS.apostrophes,
+    STYLE_MANUAL_URLS.quotationMarks
   ],
   'inclusive-language': [
-    '/accessible-and-inclusive-content/inclusive-language/',
-    '/accessible-and-inclusive-content/inclusive-language/gender-and-sexual-diversity',
-    '/accessible-and-inclusive-content/inclusive-language/disability-and-neurodiversity',
-    '/accessible-and-inclusive-content/inclusive-language/aboriginal-and-torres-strait-islander-peoples'
+    STYLE_MANUAL_URLS.genderSexualDiversity,
+    STYLE_MANUAL_URLS.disabilityNeurodiversity,
+    STYLE_MANUAL_URLS.aboriginalTorresStrait,
+    STYLE_MANUAL_URLS.culturalLinguisticDiversity
   ],
   'grammar': [
-    '/grammar-punctuation-and-conventions/',
-    '/grammar-punctuation-and-conventions/types-words',
-    '/grammar-punctuation-and-conventions/parts-sentences'
+    STYLE_MANUAL_URLS.nouns,
+    STYLE_MANUAL_URLS.verbs,
+    STYLE_MANUAL_URLS.adjectives,
+    STYLE_MANUAL_URLS.clauses
   ],
   'accessibility': [
-    '/accessible-and-inclusive-content/',
-    '/accessible-and-inclusive-content/make-content-accessible',
-    '/accessible-and-inclusive-content/how-people-read'
+    STYLE_MANUAL_URLS.makeContentAccessible,
+    STYLE_MANUAL_URLS.applyAccessibilityPrinciples,
+    STYLE_MANUAL_URLS.howPeopleRead
   ],
   'structure': [
-    '/structuring-content/',
-    '/structuring-content/headings',
-    '/structuring-content/paragraphs',
-    '/structuring-content/lists'
+    STYLE_MANUAL_URLS.headings,
+    STYLE_MANUAL_URLS.paragraphs,
+    STYLE_MANUAL_URLS.lists,
+    STYLE_MANUAL_URLS.typesStructure
   ],
   'spelling': [
-    '/grammar-punctuation-and-conventions/spelling',
-    '/grammar-punctuation-and-conventions/spelling/common-misspellings-and-word-confusion'
+    STYLE_MANUAL_URLS.commonMisspellings
   ],
   'structuringContent': [
-    '/structuring-content/',
-    '/structuring-content/structure-content-information-architecture',
-    '/structuring-content/page-titles'
+    STYLE_MANUAL_URLS.typesStructure,
+    STYLE_MANUAL_URLS.hierarchicalStructure,
+    STYLE_MANUAL_URLS.sequentialStructure
   ],
   'headings': [
-    '/structuring-content/headings',
-    '/structuring-content/headings/heading-hierarchy',
-    '/structuring-content/headings/descriptive-headings'
+    STYLE_MANUAL_URLS.headings
   ],
   'links': [
-    '/structuring-content/links',
-    '/structuring-content/links/link-text',
-    '/structuring-content/links/external-links'
+    STYLE_MANUAL_URLS.links
   ],
   'lists': [
-    '/structuring-content/lists',
-    '/structuring-content/lists/bulleted-lists',
-    '/structuring-content/lists/numbered-lists'
+    STYLE_MANUAL_URLS.lists
   ],
   'paragraphs': [
-    '/structuring-content/paragraphs',
-    '/structuring-content/paragraphs/paragraph-length',
-    '/structuring-content/paragraphs/topic-sentences'
+    STYLE_MANUAL_URLS.paragraphs
   ],
   'tables': [
-    '/structuring-content/tables',
-    '/structuring-content/tables/table-structure',
-    '/structuring-content/tables/table-headers'
+    STYLE_MANUAL_URLS.tables
   ],
   'sentences': [
-    '/writing-and-designing-content/clear-language-and-writing-style/sentences',
-    '/writing-and-designing-content/clear-language-and-writing-style/sentences/sentence-length',
-    '/writing-and-designing-content/clear-language-and-writing-style/sentences/sentence-structure'
+    STYLE_MANUAL_URLS.sentences
   ],
   'howPeopleFindInfo': [
-    '/accessible-and-inclusive-content/how-people-read',
-    '/accessible-and-inclusive-content/how-people-read/scanning-and-reading-patterns',
-    '/accessible-and-inclusive-content/how-people-read/cognitive-load'
+    STYLE_MANUAL_URLS.howPeopleRead,
+    STYLE_MANUAL_URLS.howPeopleFindInfo
   ],
   'numeralsOrWords': [
-    '/grammar-punctuation-and-conventions/numbers',
-    '/grammar-punctuation-and-conventions/numbers/when-to-use-numerals-or-words',
-    '/grammar-punctuation-and-conventions/numbers/large-numbers'
+    STYLE_MANUAL_URLS.numeralsOrWords,
+    STYLE_MANUAL_URLS.numbersMeasurements
   ],
   'currency': [
-    '/grammar-punctuation-and-conventions/numbers/currency',
-    '/grammar-punctuation-and-conventions/numbers/currency/australian-currency',
-    '/grammar-punctuation-and-conventions/numbers/currency/foreign-currency'
+    STYLE_MANUAL_URLS.currency
   ],
   'dateTime': [
-    '/grammar-punctuation-and-conventions/dates-and-time',
-    '/grammar-punctuation-and-conventions/dates-and-time/date-formats',
-    '/grammar-punctuation-and-conventions/dates-and-time/time-formats'
+    STYLE_MANUAL_URLS.datesTime
   ],
   'typesStructure': [
-    '/structuring-content/types-structure',
-    '/structuring-content/types-structure/introduction',
-    '/structuring-content/types-structure/body-structure'
+    STYLE_MANUAL_URLS.typesStructure
   ],
   'hierarchicalStructure': [
-    '/structuring-content/types-structure/hierarchical-structure',
-    '/structuring-content/types-structure/hierarchical-structure/overview-to-detail',
-    '/structuring-content/types-structure/hierarchical-structure/category-structures'
+    STYLE_MANUAL_URLS.hierarchicalStructure
   ],
   'sequentialStructure': [
-    '/structuring-content/types-structure/sequential-structure',
-    '/structuring-content/types-structure/sequential-structure/step-by-step',
-    '/structuring-content/types-structure/sequential-structure/process-flows'
+    STYLE_MANUAL_URLS.sequentialStructure
   ]
 };
 

@@ -16,9 +16,10 @@ describe('URL Configuration', () => {
 
   describe('URL Configuration', () => {
     test('should have all required URLs configured', () => {
-      expect(STYLE_MANUAL_URLS.homepage).toBeDefined();
-      expect(STYLE_MANUAL_URLS.grammarPunctuation).toBeDefined();
-      expect(STYLE_MANUAL_URLS.accessibleContent).toBeDefined();
+      expect(STYLE_MANUAL_URLS.plainLanguage).toBeDefined();
+      expect(STYLE_MANUAL_URLS.punctuationCapitalisation).toBeDefined();
+      expect(STYLE_MANUAL_URLS.makeContentAccessible).toBeDefined();
+      expect(STYLE_MANUAL_URLS.clearLanguage).toBeDefined();
     });
 
     test('should have valid default search URLs', () => {
