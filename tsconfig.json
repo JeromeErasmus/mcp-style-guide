@@ -8,6 +8,7 @@
     "allowImportingTsExtensions": false,
     "resolveJsonModule": true,
     "declaration": true,
+    "emitDeclarationOnly": false,
     "outDir": "./dist",
     "rootDir": "./src",
     "removeComments": false,

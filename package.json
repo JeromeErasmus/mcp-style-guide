@@ -25,6 +25,10 @@
     "tsx": "^4.0.0",
     "typescript": "^5.0.0"
   },
+  "engines": {
+    "node": ">=20.18.1",
+    "npm": ">=10.0.0"
+  },
   "keywords": [
     "mcp",
     "style-manual",
