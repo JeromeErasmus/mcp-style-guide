@@ -7,6 +7,7 @@ import { fetchPageTool } from './tools/fetch-page.js';
 import { searchContentTool } from './tools/search-content.js';
 import { downloadAllTool } from './tools/download-all.js';
 import { rewriteDocumentTool } from './tools/rewrite-document.js';
+import { FOCUS_AREA_KEYS, FocusAreaKey } from './config/focus-areas.js';
 
 // Create MCP server
 const server = new McpServer({
@@ -59,16 +60,7 @@ server.registerTool(
     description: rewriteDocumentTool.description,
     inputSchema: {
       document: z.string().describe("The document text to rewrite"),
-      focusAreas: z.array(z.enum([
-        'plain-language', 
-        'active-voice', 
-        'punctuation', 
-        'inclusive-language', 
-        'grammar', 
-        'accessibility', 
-        'structure', 
-        'spelling'
-      ])).optional().describe("Specific style areas to focus on (default: all areas)"),
+      focusAreas: z.array(z.enum(FOCUS_AREA_KEYS as [FocusAreaKey, ...FocusAreaKey[]])).optional().describe("Specific style areas to focus on (default: comprehensive readability, structure, and formatting areas)"),
       targetAudience: z.enum(['general-public', 'government-staff', 'technical-audience']).optional().default('general-public').describe("Target audience for the rewrite"),
       explanation: z.boolean().optional().default(true).describe("Include explanation of changes made")
     }

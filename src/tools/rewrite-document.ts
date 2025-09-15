@@ -4,99 +4,8 @@ import { StyleManualExtractor } from '../extraction/style-manual-extractor.js';
 import { SimpleSearch } from '../search/simple-search.js';
 import { formatAsMarkdown } from '../utils/formatters.js';
 import { handleToolError } from '../utils/errors.js';
-import { ToolError } from '../types/index.js';
-import { STYLE_MANUAL_URLS } from '../config/urls.js';
-
-// Style focus area mappings to Style Manual URLs from configuration
-const FOCUS_AREA_URLS: Record<string, string[]> = {
-  'plain-language': [
-    STYLE_MANUAL_URLS.plainLanguage,
-    STYLE_MANUAL_URLS.sentences,
-    STYLE_MANUAL_URLS.literacyAndAccess
-  ],
-  'active-voice': [
-    STYLE_MANUAL_URLS.voiceAndTone,
-    STYLE_MANUAL_URLS.sentences
-  ],
-  'punctuation': [
-    STYLE_MANUAL_URLS.punctuationCapitalisation,
-    STYLE_MANUAL_URLS.commas,
-    STYLE_MANUAL_URLS.apostrophes,
-    STYLE_MANUAL_URLS.quotationMarks
-  ],
-  'inclusive-language': [
-    STYLE_MANUAL_URLS.genderSexualDiversity,
-    STYLE_MANUAL_URLS.disabilityNeurodiversity,
-    STYLE_MANUAL_URLS.aboriginalTorresStrait,
-    STYLE_MANUAL_URLS.culturalLinguisticDiversity
-  ],
-  'grammar': [
-    STYLE_MANUAL_URLS.nouns,
-    STYLE_MANUAL_URLS.verbs,
-    STYLE_MANUAL_URLS.adjectives,
-    STYLE_MANUAL_URLS.clauses
-  ],
-  'accessibility': [
-    STYLE_MANUAL_URLS.makeContentAccessible,
-    STYLE_MANUAL_URLS.applyAccessibilityPrinciples,
-    STYLE_MANUAL_URLS.howPeopleRead
-  ],
-  'structure': [
-    STYLE_MANUAL_URLS.headings,
-    STYLE_MANUAL_URLS.paragraphs,
-    STYLE_MANUAL_URLS.lists,
-    STYLE_MANUAL_URLS.typesStructure
-  ],
-  'spelling': [
-    STYLE_MANUAL_URLS.commonMisspellings
-  ],
-  'structuringContent': [
-    STYLE_MANUAL_URLS.typesStructure,
-    STYLE_MANUAL_URLS.hierarchicalStructure,
-    STYLE_MANUAL_URLS.sequentialStructure
-  ],
-  'headings': [
-    STYLE_MANUAL_URLS.headings
-  ],
-  'links': [
-    STYLE_MANUAL_URLS.links
-  ],
-  'lists': [
-    STYLE_MANUAL_URLS.lists
-  ],
-  'paragraphs': [
-    STYLE_MANUAL_URLS.paragraphs
-  ],
-  'tables': [
-    STYLE_MANUAL_URLS.tables
-  ],
-  'sentences': [
-    STYLE_MANUAL_URLS.sentences
-  ],
-  'howPeopleFindInfo': [
-    STYLE_MANUAL_URLS.howPeopleRead,
-    STYLE_MANUAL_URLS.howPeopleFindInfo
-  ],
-  'numeralsOrWords': [
-    STYLE_MANUAL_URLS.numeralsOrWords,
-    STYLE_MANUAL_URLS.numbersMeasurements
-  ],
-  'currency': [
-    STYLE_MANUAL_URLS.currency
-  ],
-  'dateTime': [
-    STYLE_MANUAL_URLS.datesTime
-  ],
-  'typesStructure': [
-    STYLE_MANUAL_URLS.typesStructure
-  ],
-  'hierarchicalStructure': [
-    STYLE_MANUAL_URLS.hierarchicalStructure
-  ],
-  'sequentialStructure': [
-    STYLE_MANUAL_URLS.sequentialStructure
-  ]
-};
+import { ToolError, PageContent } from '../types/index.js';
+import { FOCUS_AREA_URLS, FOCUS_AREA_KEYS, DEFAULT_FOCUS_AREAS, FocusAreaKey } from '../config/focus-areas.js';
 
 interface StyleGuideline {
   area: string;
@@ -112,50 +21,7 @@ export const rewriteDocumentTool = {
     document: z.string().optional().describe("The document text to rewrite (required if no inputFile)"),
     inputFile: z.string().optional().describe("Path to input file to read and rewrite (required if no document)"),
     outputFile: z.string().optional().describe("Path to output file to write the rewritten content (optional, prints to console if not specified)"),
-    focusAreas: z.array(z.enum([
-      'plain-language', 
-      'active-voice', 
-      'punctuation', 
-      'inclusive-language', 
-      'grammar', 
-      'accessibility', 
-      'structure', 
-      'spelling',
-      'structuringContent',
-      'headings',
-      'links',
-      'lists',
-      'paragraphs',
-      'tables',
-      'sentences',
-      'howPeopleFindInfo',
-      'numeralsOrWords',
-      'currency',
-      'dateTime',
-      'typesStructure',
-      'hierarchicalStructure',
-      'sequentialStructure'
-    ])).optional().default([
-      'plain-language', 
-      'active-voice', 
-      'structure', 
-      'accessibility', 
-      'inclusive-language',
-      'structuringContent',
-      'headings',
-      'links',
-      'lists',
-      'paragraphs',
-      'tables',
-      'sentences',
-      'howPeopleFindInfo',
-      'numeralsOrWords',
-      'currency',
-      'dateTime',
-      'typesStructure',
-      'hierarchicalStructure',
-      'sequentialStructure'
-    ]).describe("Specific style areas to focus on (default: comprehensive readability, structure, and formatting areas)"),
+    focusAreas: z.array(z.enum(FOCUS_AREA_KEYS as [FocusAreaKey, ...FocusAreaKey[]])).optional().default(DEFAULT_FOCUS_AREAS).describe("Specific style areas to focus on (default: comprehensive readability, structure, and formatting areas)"),
     targetAudience: z.enum(['general-public', 'government-staff', 'technical-audience']).optional().default('general-public').describe("Target audience for the rewrite"),
     explanation: z.boolean().optional().default(true).describe("Include explanation of changes made")
   }).refine((data) => data.document || data.inputFile, {
@@ -166,34 +32,14 @@ export const rewriteDocumentTool = {
     document,
     inputFile,
     outputFile,
-    focusAreas = [
-      'plain-language', 
-      'active-voice', 
-      'structure', 
-      'accessibility', 
-      'inclusive-language',
-      'structuringContent',
-      'headings',
-      'links',
-      'lists',
-      'paragraphs',
-      'tables',
-      'sentences',
-      'howPeopleFindInfo',
-      'numeralsOrWords',
-      'currency',
-      'dateTime',
-      'typesStructure',
-      'hierarchicalStructure',
-      'sequentialStructure'
-    ], 
+    focusAreas = DEFAULT_FOCUS_AREAS, 
     targetAudience = 'general-public',
     explanation = true 
   }: { 
     document?: string; 
     inputFile?: string;
     outputFile?: string;
-    focusAreas?: ('plain-language' | 'active-voice' | 'punctuation' | 'inclusive-language' | 'grammar' | 'accessibility' | 'structure' | 'spelling' | 'structuringContent' | 'headings' | 'links' | 'lists' | 'paragraphs' | 'tables' | 'sentences' | 'howPeopleFindInfo' | 'numeralsOrWords' | 'currency' | 'dateTime' | 'typesStructure' | 'hierarchicalStructure' | 'sequentialStructure')[] | undefined; 
+    focusAreas?: FocusAreaKey[] | undefined; 
     targetAudience?: 'general-public' | 'government-staff' | 'technical-audience' | undefined;
     explanation?: boolean | undefined;
   }) => {
@@ -216,45 +62,96 @@ export const rewriteDocumentTool = {
         documentContent = document!;
       }
 
-      // Import URL configuration
+      // Import URL configuration and cache
       const { getFullUrl } = await import('../config/urls.js') as { getFullUrl: (path: string) => string };
+      const { GlobalCache } = await import('../utils/cache.js');
       
       const extractor = new StyleManualExtractor();
       const searcher = new SimpleSearch();
+      const cache = new GlobalCache();
+      
+      // Check if cache is available
+      const isCachePopulated = await cache.isCachePopulated();
       
       // Gather relevant style guidelines
       const guidelines: StyleGuideline[] = [];
       
-      for (const focusArea of focusAreas) {
-        const urls = FOCUS_AREA_URLS[focusArea];
-        if (!urls) continue;
+      if (isCachePopulated) {
+        // Use cached content for faster processing
+        console.log('Using cached content for rewrite guidelines');
+        const cachedFiles = await cache.getAllCachedFiles();
         
-        for (const uriPath of urls) {
-          try {
-            const fullUrl = getFullUrl(uriPath);
-            const content = await extractor.extractPageContent(fullUrl);
-            
-            // Extract key guidelines from content
-            const keyPhrases = [
-              'use plain language', 'write short sentences', 'use active voice',
-              'avoid jargon', 'use simple words', 'be inclusive', 'avoid bias',
-              'use proper punctuation', 'check spelling', 'structure clearly',
-              'use headings', 'write for accessibility', 'year 7 reading level'
-            ];
-            
-            for (const phrase of keyPhrases) {
-              const matches = searcher.findMatches(content, phrase);
-              for (const match of matches) {
-                guidelines.push({
-                  area: focusArea,
-                  rule: match.snippet,
-                  source: content.url
-                });
+        for (const focusArea of focusAreas) {
+          // Extract key guidelines from cached content for this focus area
+          const keyPhrases = [
+            'use plain language', 'write short sentences', 'use active voice',
+            'avoid jargon', 'use simple words', 'be inclusive', 'avoid bias',
+            'use proper punctuation', 'check spelling', 'structure clearly',
+            'use headings', 'write for accessibility', 'year 7 reading level'
+          ];
+          
+          for (const file of cachedFiles.slice(0, 10)) { // Limit to first 10 files for performance
+            try {
+              const content = await cache.getCachedFile(file);
+              if (!content) continue; // Skip if content is null
+              
+              for (const phrase of keyPhrases) {
+                const pageContent: PageContent = {
+                  content,
+                  url: file,
+                  title: file.replace(/\.md$/, '').replace(/^.*\//, ''),
+                  sections: [],
+                  lastFetched: new Date()
+                };
+                const matches = searcher.findMatches(pageContent, phrase);
+                for (const match of matches) {
+                  guidelines.push({
+                    area: focusArea,
+                    rule: match.snippet,
+                    source: file
+                  });
+                }
               }
+            } catch (error) {
+              // Continue with other files if one fails
+              continue;
             }
-          } catch (error) {
-            // Continue with other URLs if one fails
-            console.warn(`Failed to fetch guidelines from ${uriPath}:`, error);
+          }
+        }
+      } else {
+        // Fallback to URL fetching if no cache available
+        console.log('No cache available, fetching from URLs');
+        for (const focusArea of focusAreas) {
+          const urls = FOCUS_AREA_URLS[focusArea];
+          if (!urls) continue;
+          
+          for (const uriPath of urls.slice(0, 3)) { // Limit URLs for performance
+            try {
+              const fullUrl = getFullUrl(uriPath);
+              const content = await extractor.extractPageContent(fullUrl);
+              
+              // Extract key guidelines from content
+              const keyPhrases = [
+                'use plain language', 'write short sentences', 'use active voice',
+                'avoid jargon', 'use simple words', 'be inclusive', 'avoid bias',
+                'use proper punctuation', 'check spelling', 'structure clearly',
+                'use headings', 'write for accessibility', 'year 7 reading level'
+              ];
+              
+              for (const phrase of keyPhrases) {
+                const matches = searcher.findMatches(content, phrase);
+                for (const match of matches) {
+                  guidelines.push({
+                    area: focusArea,
+                    rule: match.snippet,
+                    source: content.url
+                  });
+                }
+              }
+            } catch (error) {
+              // Continue with other URLs if one fails
+              console.warn(`Failed to fetch guidelines from ${uriPath}:`, error);
+            }
           }
         }
       }
@@ -430,6 +327,44 @@ function generateRewriteInstructions(
     instructions.push("Use step-by-step structure for processes and procedures.");
     instructions.push("Create clear process flows and sequential information.");
     instructions.push("Number steps and use logical ordering for tasks.");
+  }
+  
+  if (focusAreas.includes('government-writing')) {
+    instructions.push("Apply government writing handbook principles for official documents.");
+    instructions.push("Make clear arguments with evidence and logical structure.");
+    instructions.push("Write for your specific audience with appropriate tone.");
+    instructions.push("Use mechanics of writing correctly - grammar, punctuation, style.");
+  }
+  
+  if (focusAreas.includes('shortened-words')) {
+    instructions.push("Use abbreviations and acronyms consistently and appropriately.");
+    instructions.push("Spell out acronyms on first use, then use abbreviated form.");
+    instructions.push("Avoid contractions in formal government documents.");
+    instructions.push("Use standard Latin abbreviated forms correctly (e.g., etc., i.e., e.g.).");
+  }
+  
+  if (focusAreas.includes('extended-punctuation')) {
+    instructions.push("Use advanced punctuation correctly (dashes, colons, semicolons).");
+    instructions.push("Apply brackets and parentheses for supplementary information.");
+    instructions.push("Use ellipses and other punctuation marks appropriately.");
+  }
+  
+  if (focusAreas.includes('terminology')) {
+    instructions.push("Use consistent and appropriate terminology for government, commercial, and technical terms.");
+    instructions.push("Apply correct forms for personal names, place names, and organization names.");
+    instructions.push("Use Australian conventions for geographic and cultural terms.");
+  }
+  
+  if (focusAreas.includes('content-types')) {
+    instructions.push("Apply content type specific guidelines for format and structure.");
+    instructions.push("Consider accessibility requirements for images, videos, and multimedia.");
+    instructions.push("Use appropriate formatting for emails, forms, and digital content.");
+  }
+  
+  if (focusAreas.includes('writing-process')) {
+    instructions.push("Consider user research insights and audience needs.");
+    instructions.push("Apply content strategy principles for findability and SEO.");
+    instructions.push("Use systematic editing and proofreading approaches.");
   }
   
   // Audience-specific adjustments

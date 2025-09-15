@@ -287,9 +287,16 @@ Rewrite documents using Australian Style Manual guidelines for clarity, accessib
 - `typesStructure`: Appropriate content structure selection *(default)*
 - `hierarchicalStructure`: Overview-to-detail organization *(default)*
 - `sequentialStructure`: Step-by-step and process structures *(default)*
-- `punctuation`: Fix punctuation and grammar
+- `punctuation`: Fix punctuation and grammar issues
 - `grammar`: Improve sentence structure and word choice
 - `spelling`: Fix common misspellings and word confusion
+- `reports`: Specific guidelines for government reports and authoritative documents
+- `government-writing`: Government Writing Handbook principles for official documents *(default)*
+- `shortened-words`: Consistent abbreviations, acronyms, and contractions *(default)*
+- `terminology`: Proper government, commercial, and geographic terminology *(default)*
+- `extended-punctuation`: Advanced punctuation (dashes, colons, brackets, ellipses)
+- `content-types`: Format-specific guidelines for blogs, emails, forms, PDFs, social media
+- `writing-process`: Content strategy, user research, and systematic editing approaches
 
 **Target Audiences:**
 - `general-public`: Simplest language, no jargon *(default)*
