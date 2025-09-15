@@ -1,6 +1,10 @@
 # Australian Style Manual MCP Server
 
+[![npm version](https://badge.fury.io/js/australian-style-manual-mcp.svg)](https://www.npmjs.com/package/australian-style-manual-mcp)
+
 A Model Context Protocol (MCP) server that provides Claude with access to the Australian Government Style Manual as a reference tool for writing guidance.
+
+**📦 Available on npm:** `australian-style-manual-mcp`
 
 ## Features
 
@@ -16,30 +20,42 @@ A Model Context Protocol (MCP) server that provides Claude with access to the Au
 
 ## Installation
 
-### Quick Install (One Command)
+### NPM Package Install (Recommended)
 
+**Install directly from npm:**
 ```bash
-# Install and auto-configure for Claude Code
-curl -sSL https://raw.githubusercontent.com/user/mcp-style-guide/main/install.sh | bash
+npx australian-style-manual-mcp
 ```
 
-Or using git:
-```bash
-# Clone, build, and configure in one line
-git clone <repo-url> ~/mcp-style-guide && cd ~/mcp-style-guide && yarn install && yarn build && echo "Add to Claude Code MCP config: node $(pwd)/dist/server.js"
+**Add to Claude Code MCP configuration (`~/.config/claude-code/mcp_settings.json`):**
+```json
+{
+  "mcpServers": {
+    "australian-style-manual": {
+      "command": "npx",
+      "args": ["australian-style-manual-mcp"]
+    }
+  }
+}
 ```
 
-### Manual Install
-
+**Or use Claude Code CLI:**
 ```bash
-# Clone and build
-git clone <repository>
+claude-code config add-mcp-server australian-style-manual npx australian-style-manual-mcp
+```
+
+### Development Install (Local)
+
+**For development or customization:**
+```bash
+# Clone and build from source
+git clone https://github.com/jerome-erasmus/mcp-style-guide.git
 cd mcp-style-guide
 yarn install
 yarn build
 ```
 
-**Then add to your Claude Code MCP configuration (`~/.config/claude-code/mcp_settings.json`):**
+**Add to Claude Code MCP configuration:**
 ```json
 {
   "mcpServers": {
@@ -49,6 +65,18 @@ yarn build
     }
   }
 }
+```
+
+### Alternative Install Methods
+
+**Global install:**
+```bash
+npm install -g australian-style-manual-mcp
+```
+
+**Quick test without install:**
+```bash
+npx australian-style-manual-mcp --help
 ```
 
 ## How It Works

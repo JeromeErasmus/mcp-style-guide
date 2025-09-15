@@ -4,7 +4,9 @@
   "description": "MCP server for Australian Government Style Manual reference tool",
   "type": "module",
   "main": "dist/server.js",
-  "bin": "dist/server.js",
+  "bin": {
+    "australian-style-manual-mcp": "dist/server.js"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/server.ts",
@@ -31,6 +33,19 @@
     "australian-government",
     "writing-guide"
   ],
-  "author": "Your Name",
-  "license": "MIT"
+  "author": "Jerome Erasmus",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerome-erasmus/mcp-style-guide.git"
+  },
+  "homepage": "https://github.com/jerome-erasmus/mcp-style-guide#readme",
+  "bugs": {
+    "url": "https://github.com/jerome-erasmus/mcp-style-guide/issues"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ]
 }
