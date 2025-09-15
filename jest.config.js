@@ -7,6 +7,10 @@ export default {
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       useESM: true,
+      tsconfig: {
+        target: 'ES2022',
+        module: 'ESNext'
+      }
     }],
   },
   testEnvironment: 'node',
