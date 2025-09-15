@@ -1,10 +1,10 @@
 # Australian Style Manual MCP Server
 
-[![npm version](https://badge.fury.io/js/australian-style-manual-mcp.svg)](https://www.npmjs.com/package/australian-style-manual-mcp)
+[![npm version](https://badge.fury.io/js/mcp-australian-style-manual.svg)](https://www.npmjs.com/package/mcp-australian-style-manual)
 
 A Model Context Protocol (MCP) server that provides Claude with access to the Australian Government Style Manual as a reference tool for writing guidance.
 
-**📦 Available on npm:** `australian-style-manual-mcp`
+**📦 Available on npm:** `mcp-australian-style-manual`
 
 ## Features
 
@@ -27,14 +27,14 @@ A Model Context Protocol (MCP) server that provides Claude with access to the Au
 
 **1. Install the package from npm:**
 ```bash
-npm install -g australian-style-manual-mcp
+npm install -g mcp-australian-style-manual
 ```
 
 **2. Add the server configuration:**
 
 **Option A: Using Claude CLI (Recommended):**
 ```bash
-claude mcp add-json --scope user australian-style-manual '{"command":"npx","args":["australian-style-manual-mcp"]}'
+claude mcp add-json --scope user australian-style-manual '{"command":"npx","args":["mcp-australian-style-manual"]}'
 ```
 
 **Option B: Manual configuration file edit:**
@@ -49,7 +49,7 @@ code ~/.config/claude/settings.json
     "servers": {
       "australian-style-manual": {
         "command": "npx",
-        "args": ["australian-style-manual-mcp"]
+        "args": ["mcp-australian-style-manual"]
       }
     }
   }
@@ -89,12 +89,12 @@ Add this to the `"mcp"` → `"servers"` section:
 
 **Global install:**
 ```bash
-npm install -g australian-style-manual-mcp
+npm install -g mcp-australian-style-manual
 ```
 
 **Quick test without install:**
 ```bash
-npx australian-style-manual-mcp --help
+npx mcp-australian-style-manual --help
 ```
 
 ## How It Works
