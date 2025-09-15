@@ -199,11 +199,6 @@ Download all Style Manual pages to permanent global cache.
 └── metadata/                  # Update tracking
 ```
 
-**Benefits:**
-- ✅ **Zero project clutter**: No files in user directories
-- ✅ **Universal access**: Works across all projects 
-- ✅ **Permanent storage**: Downloaded once, available forever
-- ✅ **Automatic reuse**: Subsequent projects use existing cache
 
 ### `fetch_style_page` (Targeted Updates)
 Fetch individual pages from the Style Manual.
@@ -337,34 +332,6 @@ Rewrite documents using Australian Style Manual guidelines for clarity, accessib
 - https://www.stylemanual.gov.au/accessible-and-inclusive-content/literacy-and-access
 ```
 
-## Typical Workflow
-
-```bash
-# Initial setup (once per MCP server installation)
-download_all_content({ forceRefresh: false })
-# → Creates permanent global cache
-
-# Daily usage (instant from cache)
-search_style_content({ query: "semicolons" })
-search_style_content({ query: "accessibility guidelines" })
-search_style_content({ query: "plain language" })
-
-# Manual refresh (only when needed)
-download_all_content({ forceRefresh: true })
-# → Force re-download latest content
-```
-
-## Configuration
-
-URLs are configured in `src/config/urls.ts`. The comprehensive set includes:
-- **Writing and designing content** (12 pages) - User research, plain language, voice & tone, findability
-- **Accessible and inclusive content** (11 pages) - Accessibility principles, inclusive language, literacy  
-- **Grammar, punctuation and conventions** (82 pages) - All word types, punctuation, numbers, names, titles
-- **Content types** (11 pages) - Blogs, PDFs, forms, images, video/audio, social media
-- **Structuring content** (10 pages) - Headings, links, lists, paragraphs, tables, content structures
-- **Referencing and attribution** (16 pages) - Citation styles, legal material, documentary notes
-- **Style Manual resources** (17+ pages) - Quick guides, Government Writing Handbook, editor's tips
-- **Total: 160+ comprehensive style guide pages**
 
 ## Usage Examples
 
