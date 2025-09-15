@@ -1,6 +1,6 @@
 {
   "name": "australian-style-manual-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for Australian Government Style Manual reference tool",
   "type": "module",
   "main": "dist/server.js",
@@ -37,11 +37,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jerome-erasmus/mcp-style-guide.git"
+    "url": "git+https://github.com/JeromeErasmus/mcp-style-guide.git"
   },
-  "homepage": "https://github.com/jerome-erasmus/mcp-style-guide#readme",
+  "homepage": "https://github.com/JeromeErasmus/mcp-style-guide#readme",
   "bugs": {
-    "url": "https://github.com/jerome-erasmus/mcp-style-guide/issues"
+    "url": "https://github.com/JeromeErasmus/mcp-style-guide/issues"
   },
   "files": [
     "dist/**/*",
