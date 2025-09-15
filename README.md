@@ -27,12 +27,19 @@ A Model Context Protocol (MCP) server that provides Claude with access to the Au
 npm install -g australian-style-manual-mcp
 ```
 
-**2. Edit the configuration file:**
+**2. Add the server configuration:**
+
+**Option A: Using Claude CLI (Recommended):**
+```bash
+claude mcp add-json --scope user australian-style-manual '{"command":"npx","args":["australian-style-manual-mcp"]}'
+```
+
+**Option B: Manual configuration file edit:**
 ```bash
 code ~/.config/claude/settings.json
 ```
 
-**3. Add the server configuration to the `"mcp"` → `"servers"` section:**
+**3. (Manual option only) Add the server configuration to the `"mcp"` → `"servers"` section:**
 ```json
 {
   "mcp": {
